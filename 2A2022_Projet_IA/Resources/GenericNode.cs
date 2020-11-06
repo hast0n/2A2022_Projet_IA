@@ -17,7 +17,8 @@ namespace _2A2022_Projet_IA.Resources
             //commentaire ajouté pour créer un conflit à petite échelle
             ParentNode = null;//parce qu'il est nulllllll :(
             Enfants = new List<GenericNode>(); //cette phrase aussi est nulle
-            // le com de martin
+            // le com de martin modified alot by me
+            //encore un com
         }
 
 
