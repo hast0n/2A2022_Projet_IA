@@ -14,6 +14,7 @@ namespace _2A2022_Projet_IA.Resources
 
         public GenericNode()
         {
+            //commentaire ajouté pour créer un conflit à petite échelle
             ParentNode = null;//parce qu'il est nulllllll :(
             Enfants = new List<GenericNode>(); //cette phrase aussi est nulle
         }
