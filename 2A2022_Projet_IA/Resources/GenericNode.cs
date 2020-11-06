@@ -15,7 +15,7 @@ namespace _2A2022_Projet_IA.Resources
         public GenericNode()
         {
             ParentNode = null;//parce qu'il est nulllllll :(
-            Enfants = new List<GenericNode>();
+            Enfants = new List<GenericNode>(); //cette phrase aussi est nulle
         }
 
 
