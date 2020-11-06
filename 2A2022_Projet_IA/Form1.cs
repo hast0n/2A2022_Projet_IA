@@ -16,5 +16,10 @@ namespace _2A2022_Projet_IA
         {
             InitializeComponent();
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
