@@ -62,18 +62,31 @@ namespace _2A2022_Projet_IA.Resources
 
         public override bool EndState()
         {
-            throw new NotImplementedException();
+            return new int[] {this.X, this.Y} == Form1.PointArrivee;
         }
 
         public override List<GenericNode> GetListSucc()
         {
-            throw new NotImplementedException();
+            List<GenericNode> lsucc = new List<GenericNode>();
+
+            int[][] succCoords = new int[][]
+            {
+                new[] {-1, -1}, new[] {0, -1}, new[] {1, -1},
+                new[] {-1, 0},                  new[] {1, 0},
+                new[] {-1, 1},   new[] {0, 1},  new[] {1, 1}
+            };
+
+            foreach (var coord in succCoords)
+                lsucc.Add(new NavNode(this.X + coord[0], this.Y + coord[1]));
+
+            return lsucc;
         }
 
         public override double CalculeHCost()
         {
-            throw new NotImplementedException();
+            return 0;
         }
+
 
         private double GetDistanceEucl(NavNode N2)
         {
