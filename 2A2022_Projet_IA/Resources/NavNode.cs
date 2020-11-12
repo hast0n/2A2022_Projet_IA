@@ -31,6 +31,7 @@ namespace _2A2022_Projet_IA.Resources
             if (GetDistanceEucl(node2) <= 10)
             {
                 // get alpha l'angle entre bateau et vent
+                double alpha = GetBoatWindAngle;
                 // get vitesse vent
                 // get vitesse bateau
                 double boatSpeed = GetBoatSpeed(alpha, VitVent);
@@ -98,9 +99,63 @@ namespace _2A2022_Projet_IA.Resources
                 }
             }
         }
-        private int GetWindDirection()
+        private int GetWindDirection(NavNode N2)
         {
-
+            if (CasNavigation == 1)
+            {
+                return (30);
+            }
+            if (CasNavigation == 2)
+            {
+                if ((N2.Y + this.Y)/2 > 150)
+                {
+                    return (180);
+                }
+                if ((N2.Y + this.Y) / 2 <= 150)
+                {
+                    return (90);
+                }
+            }
+            if (CasNavigation == 3)
+            {
+                if ((N2.Y + this.Y) / 2 > 150)
+                {
+                    return (170);
+                }
+                if ((N2.Y + this.Y) / 2 <= 150)
+                {
+                    return (65);
+                }
+            }
+        }
+        private double GetWindSpeed(NavNode N2)
+        {
+            if (CasNavigation == 1)
+            {
+                return (50);
+            }
+            if (CasNavigation == 2)
+            {
+                if ((N2.Y + this.Y) / 2 > 150)
+                {
+                    return (50);
+                }
+                if ((N2.Y + this.Y) / 2 <= 150)
+                {
+                    return (20);
+                }
+            }
+            if (CasNavigation == 3)
+            {
+                if ((N2.Y + this.Y) / 2 > 150)
+                {
+                    return (50);
+                }
+                if ((N2.Y + this.Y) / 2 <= 150)
+                {
+                    return (20);
+                }
+            }
         }
     }
 }
