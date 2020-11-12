@@ -30,8 +30,11 @@ namespace _2A2022_Projet_IA.Resources
 
             if (GetDistanceEucl(node2) <= 10)
             {
-                // get alpha
-                // angle du bateau
+                // get alpha l'angle entre bateau et vent
+                // get vitesse vent
+                // get vitesse bateau
+                double boatSpeed = GetBoatSpeed(alpha, VitVent);
+                // 
             }
             else
             {
@@ -70,7 +73,31 @@ namespace _2A2022_Projet_IA.Resources
                 )
             );
         }
-
+        private double GetBoatSpeed(double alpha,double VitVent)
+        {
+            if (alpha>= 0 && alpha<=45)
+            {
+                return ((0.6 + 0.3 * alpha / 45) * VitVent);
+            }
+            else
+            {
+                if (alpha > 45 && alpha <= 90)
+                {
+                    return ((0.9 - 0.2 * (alpha - 45)/45) * VitVent);
+                }
+                else
+                {
+                    if (alpha > 90 && alpha <= 150)
+                    {
+                        return (0.7 *(1- (alpha-90 / 60) * VitVent));
+                    }
+                    else
+                    {
+                        return (0);
+                    }
+                }
+            }
+        }
         private int GetWindDirection()
         {
 

@@ -9,13 +9,13 @@ namespace _2A2022_Projet_IA.Resources
         protected double GCost;               //coût du chemin du noeud initial jusqu'à ce noeud
         protected double HCost;               //estimation heuristique du coût pour atteindre le noeud final
         protected double TotalCost;           //coût total (g+h)
-        protected GenericNode ParentNode;     // noeud parent
-        protected List<GenericNode> Enfants;  // noeuds enfants
+        protected GenericNode ParentNode;     // noeud parent du noeud présent
+        protected List<GenericNode> Enfants;  // noeuds enfants du noeud présent
 
-        public GenericNode()
+        public GenericNode()//constructeur
         {
-            ParentNode = null;//parce qu'il est nulllllll :(
-            Enfants = new List<GenericNode>(); //cette phrase aussi est nulle
+            ParentNode = null;
+            Enfants = new List<GenericNode>();
         }
 
 
@@ -69,7 +69,7 @@ namespace _2A2022_Projet_IA.Resources
             TotalCost = GCost + HCost;
         }
 
-        // Méthodes abstrates, donc à surcharger obligatoirement avec override dans une classe fille
+        // Méthodes abstraites, donc à surcharger obligatoirement avec override dans une classe fille
         public abstract bool IsEqual(GenericNode N2);
         public abstract double GetArcCost(GenericNode N2);
         public abstract bool EndState();
