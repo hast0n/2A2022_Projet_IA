@@ -12,9 +12,9 @@ namespace _2A2022_Projet_IA
 {
     public partial class Form1 : Form
     {
-        public int CasNavigation;
-        public int[] PointDepart;
-        public int[] PointArrivee;
+        public static int CasNavigation;
+        public static int[] PointDepart;
+        public static int[] PointArrivee;
 
         public Form1()
         {
