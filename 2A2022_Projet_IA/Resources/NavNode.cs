@@ -99,62 +99,88 @@ namespace _2A2022_Projet_IA.Resources
                 }
             }
         }
+
         private int GetWindDirection(NavNode N2)
         {
             if (Form1.CasNavigation == 1)
             {
                 return (30);
             }
-            if (Form1.CasNavigation == 2)
+            else if (Form1.CasNavigation == 2)
             {
                 if ((N2.Y + this.Y)/2 > 150)
                 {
                     return (180);
                 }
-                if ((N2.Y + this.Y) / 2 <= 150)
+                else if ((N2.Y + this.Y) / 2 <= 150)
                 {
                     return (90);
                 }
+                else
+                {
+                    return (0);
+                }
             }
-            if (Form1.CasNavigation == 3)
+            else if (Form1.CasNavigation == 3)
             {
                 if ((N2.Y + this.Y) / 2 > 150)
                 {
                     return (170);
                 }
-                if ((N2.Y + this.Y) / 2 <= 150)
+                else if ((N2.Y + this.Y) / 2 <= 150)
                 {
                     return (65);
                 }
+                else
+                {
+                    return (0);
+                }
+            }
+            else
+            {
+                return (0);
             }
         }
+
         private double GetWindSpeed(NavNode N2)
         {
             if (Form1.CasNavigation == 1)
             {
                 return (50);
             }
-            if (Form1.CasNavigation == 2)
+            else if (Form1.CasNavigation == 2)
             {
                 if ((N2.Y + this.Y) / 2 > 150)
                 {
                     return (50);
                 }
-                if ((N2.Y + this.Y) / 2 <= 150)
+                else if ((N2.Y + this.Y) / 2 <= 150)
                 {
                     return (20);
+                }
+                else
+                {
+                    return (0);
                 }
             }
-            if (Form1.CasNavigation == 3)
+            else if (Form1.CasNavigation == 3)
             {
                 if ((N2.Y + this.Y) / 2 > 150)
                 {
                     return (50);
                 }
-                if ((N2.Y + this.Y) / 2 <= 150)
+                else if ((N2.Y + this.Y) / 2 <= 150)
                 {
                     return (20);
                 }
+                else
+                {
+                    return (0);
+                }
+            }
+            else
+            {
+                return (0);
             }
         }
     }
