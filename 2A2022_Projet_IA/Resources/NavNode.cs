@@ -27,20 +27,37 @@ namespace _2A2022_Projet_IA.Resources
         public override double GetArcCost(GenericNode N2)
         {
             NavNode node2 = (NavNode) N2;
+            double distance = GetDistanceEucl(node2);
 
-            if (GetDistanceEucl(node2) <= 10)
+            if (distance > 10) return WrongInput;
+            
+            // get alpha l'angle entre bateau et vent
+            double alpha = Math.Abs(GetBoatDirection(node2) - GetWindDirection(node2));
+            // get vitesse vent
+            double windSpeed = GetWindSpeed(node2);
+            // get vitesse bateau
+            double boatSpeed = GetBoatSpeed(alpha, windSpeed);
+            // On se ramène à un angle sur 180°
+            alpha = alpha > 180 ? 360 - alpha : alpha;
+
+            if (alpha <= 45)
             {
-                // get alpha l'angle entre bateau et vent
-                double alpha = GetBoatWindAngle;
-                // get vitesse vent
-                // get vitesse bateau
-                double boatSpeed = GetBoatSpeed(alpha, VitVent);
-                // 
+                /* (0.6 + 0.3α / 45) v_v */
+                boatSpeed = (0.6 + 0.3 * alpha / 45) * windSpeed;
             }
-            else
+            else if (alpha <= 90)
             {
-                return WrongInput;
+                /*v_b=(0.9-0.2(α-45)/45) v_v */
+                boatSpeed = (0.9 - 0.2 * (alpha - 45) / 45) * windSpeed;
             }
+            else if (alpha < 150)
+            {
+                /* v_b=0.7(1-(α-90)/60) v_v */
+                boatSpeed = 0.7 * (1 - (alpha - 90) / 60) * windSpeed;
+            }
+
+            // estimation du temps de navigation entre p1 et p2
+            return (distance / boatSpeed);
         }
 
         public override bool EndState()
@@ -66,15 +83,13 @@ namespace _2A2022_Projet_IA.Resources
             );
         }
 
-        private double GetBoatWindAngle()
+        private double GetBoatDirection(NavNode node2)
         {
-            return Math.Abs(
-                Math.Acos(
-                    (this.X * )
-                )
-            );
+            double a = Math.Atan2(node2.Y - this.Y, node2.X - this.X) * 180 / Math.PI;
+            return a < 0 ? a + 360 : a;
         }
-        private double GetBoatSpeed(double alpha,double VitVent)
+        
+        private double GetBoatSpeed(double alpha, double VitVent)
         {
             if (alpha>= 0 && alpha<=45)
             {
@@ -100,7 +115,7 @@ namespace _2A2022_Projet_IA.Resources
             }
         }
 
-        private int GetWindDirection(NavNode N2)
+        private double GetWindDirection(NavNode N2)
         {
             if (Form1.CasNavigation == 1)
             {
