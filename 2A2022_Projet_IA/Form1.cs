@@ -58,22 +58,23 @@ namespace _2A2022_Projet_IA
             throw new NotImplementedException();
         }
 
-        private void StartNavigation()
+        private async void StartNavigation()
         {
             SearchTree g = new SearchTree();
             NavNode N0 = new NavNode(PointDepart[0], PointDepart[1]);
 
-            List<GenericNode> solution = g.RechercheSolutionAEtoile(N0);
-
-            
-
-            foreach (var genericNode in solution)
+            await Task.Run(() =>
             {
-                NavNode node = (NavNode) genericNode;
+                List<GenericNode> solution = g.RechercheSolutionAEtoile(N0);
+                
+                foreach (var genericNode in solution)
+                {
+                    NavNode node = (NavNode) genericNode;
 
-                Color newColor = Color.FromArgb(200, 0, 0);
-                NavMap.SetPixel(node.X, node.Y, newColor);
-            }
+                    Color newColor = Color.FromArgb(200, 0, 0);
+                    NavMap.SetPixel(node.X, node.Y, newColor);
+                }
+            });
         }
 
         private void InitializePictureBox()
