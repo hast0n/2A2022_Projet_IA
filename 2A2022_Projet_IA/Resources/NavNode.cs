@@ -73,7 +73,8 @@ namespace _2A2022_Projet_IA.Resources
                 )
             );
         }
-        private double GetBoatSpeed(double alpha,double VitVent)
+
+        private double GetBoatSpeed(double alpha, double VitVent)
         {
             if (alpha>= 0 && alpha<=45)
             {
@@ -98,7 +99,8 @@ namespace _2A2022_Projet_IA.Resources
                 }
             }
         }
-        private int GetWindDirection()
+
+        private int GetWindDirection(NavNode Node2)
         {
 
         }
