@@ -13,13 +13,17 @@ namespace _2A2022_Projet_IA
 {
     public partial class Form1 : Form
     {
+        private Bitmap NavMap;
         public static int CasNavigation;
         public static int[] PointDepart;
         public static int[] PointArrivee;
+        public static int xSize = 300;
+        public static int ySize = 300;
 
         public Form1()
         {
             InitializeComponent();
+            InitializePictureBox();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -49,6 +53,11 @@ namespace _2A2022_Projet_IA
             StartNavigation();
         }
 
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
         private void StartNavigation()
         {
             SearchTree g = new SearchTree();
@@ -56,22 +65,44 @@ namespace _2A2022_Projet_IA
 
             List<GenericNode> solution = g.RechercheSolutionAEtoile(N0);
 
-            //Node2 N1 = N0;
-            //for (int i = 1; i < solution.Count; i++)
-            //{
-            //    Node2 N2 = (Node2)solution[i];
-            //    listBox1.Items.Add(Convert.ToString(N1.numero)
-            //                       + "--->" + Convert.ToString(N2.numero)
-            //                       + "   : " + Convert.ToString(matrice[N1.numero, N2.numero]));
-            //    N1 = N2;
-            //}
+            
 
-            //g.GetSearchTree(treeView1);
+            foreach (var genericNode in solution)
+            {
+                NavNode node = (NavNode) genericNode;
+
+                Color newColor = Color.FromArgb(200, 0, 0);
+                NavMap.SetPixel(node.X, node.Y, newColor);
+            }
         }
 
-        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        private void InitializePictureBox()
         {
+            // Sets up an image object to be displayed.
+            if (NavMap != null)
+            {
+                NavMap.Dispose();
+            }
+            
+            // Stretches the image to fit the pictureBox.
+            pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
 
+            NavMap = new Bitmap(xSize, ySize);
+
+            for (int x = 0; x < NavMap.Width; x++)
+            {
+                for (int y = 0; y < NavMap.Height; y++)
+                {
+                    Color pixelColor = NavMap.GetPixel(x, y);
+                    Color newColor = Color.FromArgb(255, 119, 181, 254);
+                    NavMap.SetPixel(x, y, newColor);
+                }
+            }
+
+            pictureBox1.ClientSize = new Size(xSize, ySize);
+            pictureBox1.Image = NavMap;
+
+            listBox1.Items.Add("pass!");
         }
     }
 }

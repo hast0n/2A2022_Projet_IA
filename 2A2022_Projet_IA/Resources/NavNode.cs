@@ -62,7 +62,7 @@ namespace _2A2022_Projet_IA.Resources
 
         public override bool EndState()
         {
-            return new int[] {this.X, this.Y} == Form1.PointArrivee;
+            return this.IsEqual(new NavNode(Form1.PointArrivee[0], Form1.PointArrivee[1]));
         }
 
         public override List<GenericNode> GetListSucc()
@@ -77,7 +77,14 @@ namespace _2A2022_Projet_IA.Resources
             };
 
             foreach (var coord in succCoords)
-                lsucc.Add(new NavNode(this.X + coord[0], this.Y + coord[1]));
+            {
+                int newX = this.X + coord[0];
+                int newY = this.Y + coord[1];
+
+                if (newX >= 1 && newX <= Form1.xSize &&
+                    newY >= 1 && newY <= Form1.ySize)
+                    lsucc.Add(new NavNode(newX, newY));
+            }
 
             return lsucc;
         }
