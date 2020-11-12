@@ -33,9 +33,12 @@ namespace _2A2022_Projet_IA.Resources
                 // get alpha l'angle entre bateau et vent
                 double alpha = GetBoatWindAngle;
                 // get vitesse vent
+                double VitVent = GetWindSpeed(node2);
                 // get vitesse bateau
                 double boatSpeed = GetBoatSpeed(alpha, VitVent);
-                // 
+                // get ArcCost
+                double tempsCost = GetDistanceEucl(node2) / boatSpeed;
+                return (tempsCost);
             }
             else
             {
