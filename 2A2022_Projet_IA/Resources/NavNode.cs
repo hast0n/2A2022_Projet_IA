@@ -92,6 +92,8 @@ namespace _2A2022_Projet_IA.Resources
         public override double CalculeHCost()
         {
             return 0;
+            //retourner un temps heuristique égal à la distance manhattan / vitesse en ce point 
+            //
         }
 
 
