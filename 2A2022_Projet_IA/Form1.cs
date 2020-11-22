@@ -105,5 +105,10 @@ namespace _2A2022_Projet_IA
 
             listBox1.Items.Add("pass!");
         }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

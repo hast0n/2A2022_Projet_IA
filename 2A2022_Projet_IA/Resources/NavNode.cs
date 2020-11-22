@@ -88,12 +88,18 @@ namespace _2A2022_Projet_IA.Resources
 
             return lsucc;
         }
-
         public override double CalculeHCost()
         {
+
             return 0;
-            //retourner un temps heuristique égal à la distance manhattan / vitesse en ce point 
-            //
+
+        }
+        public double CalculeHCost2(NavNode N2)
+        {
+            NavNode nodeFin = new NavNode(Form1.PointArrivee[0], Form1.PointArrivee[1]);
+            return (GetDistanceEucl(nodeFin)/GetBoatSpeed(GetBoatDirection(nodeFin),GetWindSpeed(this)));
+            //retourner un temps heuristique égal à la distance manhattan / vitesse en ce node
+            
         }
 
 
