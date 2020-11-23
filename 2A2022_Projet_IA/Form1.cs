@@ -94,15 +94,28 @@ namespace _2A2022_Projet_IA
             {
                 List<GenericNode> solution = g.RechercheSolutionAEtoile(N0);
                 //var elapsed = stopwatch.Elapsed.Seconds;
-
+                double totalCost = 0;
+                NavNode precedent = new NavNode(0, 0);
                 foreach (var genericNode in solution)
                 {
                     NavNode node = (NavNode) genericNode;
                     NavMap.SetPixel(node.X, node.Y, TraceColor);
+                    if (genericNode != solution[0])
+                    {
+                        totalCost += precedent.GetArcCost(node);
+                        precedent = node;
+                    }
+                    else
+                    {
+                        precedent = node;
+                    }
                 }
+                listBox1.Items.Add($"Coût total : " + totalCost);
             });
 
             listBox1.Items.Add($"Recherche terminée!");
+            
+            stopwatch.Stop();
             //listBox1.Items.Add($"Recherche terminée! - {elapsed}s");
             //listBox1.Items.Add($"Traçage du chemin...");
         }
