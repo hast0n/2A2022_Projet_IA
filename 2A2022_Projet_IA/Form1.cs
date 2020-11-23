@@ -80,7 +80,7 @@ namespace _2A2022_Projet_IA
             foreach (var genericNode in solution)
             {
                 NavNode node = (NavNode)genericNode;
-                NavMap.SetPixel(node.X, node.Y, currentColor);
+                NavMap.SetPixel( 300-node.Y, node.X, currentColor);
                 if (genericNode != solution[0])
                 {
                     totalCost += precedent.GetArcCost(node);
