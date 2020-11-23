@@ -28,11 +28,16 @@ namespace _2A2022_Projet_IA
         public Color TraceColor;
         public Dictionary<string, Color> TraceColors;
 
+        private enum Colors
+        {
+            Blue, Red, Yellow, Green, Cyan, Magenta, 
+        }
+
         public Form1()
         {
             BackgroundColor = Color.FromArgb(255, 119, 181, 254);
             TraceColor = Color.FromArgb(200, 0, 0);
-
+            
             InitializeComponent();
             InitializePictureBox();
 
@@ -78,8 +83,8 @@ namespace _2A2022_Projet_IA
             SearchTree g = new SearchTree();
             NavNode N0 = new NavNode(PointDepart[0], PointDepart[1]);
 
-            listBox1.Items.Add($"--- --- --- --- --- --- ");
-            listBox1.Items.Add($"Cas {CasNavigation} chargé!");
+            listBox1.Items.Add(new string('#', 10));
+            listBox1.Items.Add($"Cas {CasNavigation} chargé !");
             listBox1.Items.Add($"Lancement de l'A*");
 
             stopwatch.Reset();
@@ -87,22 +92,19 @@ namespace _2A2022_Projet_IA
 
             await Task.Run(() =>
             {
-
                 List<GenericNode> solution = g.RechercheSolutionAEtoile(N0);
-                var elapsed = stopwatch.Elapsed.Seconds;
-                
-                listBox1.Items.Add($"Recherche terminée! - {elapsed}s");
-                listBox1.Items.Add($"Traçage du chemin...");
+                //var elapsed = stopwatch.Elapsed.Seconds;
 
                 foreach (var genericNode in solution)
                 {
                     NavNode node = (NavNode) genericNode;
                     NavMap.SetPixel(node.X, node.Y, TraceColor);
                 }
-
-                listBox1.Items.Add($"Traçage terminé !");
             });
 
+            listBox1.Items.Add($"Recherche terminée!");
+            //listBox1.Items.Add($"Recherche terminée! - {elapsed}s");
+            //listBox1.Items.Add($"Traçage du chemin...");
         }
 
         private void InitializePictureBox()
