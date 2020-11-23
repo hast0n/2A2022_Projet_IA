@@ -92,6 +92,7 @@ namespace _2A2022_Projet_IA.Resources
         public override double CalculeHCost()
         {
             NavNode nodeFin = new NavNode(Form1.PointArrivee[0], Form1.PointArrivee[1]);
+
             var dist = GetDistanceEucl(nodeFin);
             var time = GetBoatSpeed(GetBoatDirection(nodeFin), GetWindSpeed(this));
 

@@ -21,6 +21,8 @@ namespace _2A2022_Projet_IA
         public static int[] PointDepart { get; private set; }
         public static int[] PointArrivee { get; private set; }
 
+        public double TotalCost { get; private set; }
+
         public static int xSize { get; private set; }
         public static int ySize { get; private set; }
 
@@ -50,14 +52,64 @@ namespace _2A2022_Projet_IA
                 {Colors.Black, Color.Black},
                 {Colors.Magenta, Color.Magenta},
             };
-            
+
             InitializeComponent();
             InitializePictureBox();
 
+            backgroundWorker1.DoWork += backgroundWorker1_DoWork;
+            backgroundWorker1.RunWorkerCompleted += backgroundWorker1_RunWorkerCompleted;
+            
             colorComboBox.DataSource = Enum.GetValues(typeof(Colors));
 
             stopwatch = new Stopwatch();
         }
+
+        
+        
+        private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
+        {
+            SearchTree g = new SearchTree();
+            NavNode N0 = new NavNode(PointDepart[0], PointDepart[1]);
+
+            List<GenericNode> solution = g.RechercheSolutionAEtoile(N0);
+            double totalCost = 0;
+
+            Color currentColor = CurrentTraceColor;
+            NavNode precedent = new NavNode(0, 0);
+
+            foreach (var genericNode in solution)
+            {
+                NavNode node = (NavNode)genericNode;
+                NavMap.SetPixel(node.X, node.Y, currentColor);
+                if (genericNode != solution[0])
+                {
+                    totalCost += precedent.GetArcCost(node);
+                    precedent = node;
+                }
+                else
+                {
+                    precedent = node;
+                }
+            }
+
+            TotalCost = totalCost;
+        }
+
+        private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            stopwatch.Stop();
+
+            pictureBox1.Refresh();
+
+            TimeSpan ETA = TimeSpan.FromHours(TotalCost);
+            string ETAString = GetFormattedETA(ETA);
+
+            listBox1.Items.Add("Recherche terminée");
+            listBox1.Items.Add($"Temps d'exécution : {stopwatch.Elapsed.Seconds}s");
+            listBox1.Items.Add($"ETA: {ETAString}");
+        }
+
+
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -86,7 +138,7 @@ namespace _2A2022_Projet_IA
             StartNavigation();
         }
 
-        private async void StartNavigation()
+        private void StartNavigation()
         {
             if (stopwatch.IsRunning)
             {
@@ -95,50 +147,29 @@ namespace _2A2022_Projet_IA
                 return;
             }
 
-            SearchTree g = new SearchTree();
-            NavNode N0 = new NavNode(PointDepart[0], PointDepart[1]);
-
-            listBox1.Items.Add(new string('=', 15));
+            listBox1.Items.Add(new string('=', 20));
             listBox1.Items.Add($"Cas {CasNavigation} chargé !");
             listBox1.Items.Add($"Lancement de l'A*");
+            listBox1.Items.Add($"Veuillez patienter...");
 
             stopwatch.Reset();
             stopwatch.Start();
+            
+            backgroundWorker1.RunWorkerAsync();
+        }
 
-            await Task.Run(() =>
-            {
-                Color currentColor = CurrentTraceColor;
 
-                List<GenericNode> solution = g.RechercheSolutionAEtoile(N0);
-                //var elapsed = stopwatch.Elapsed.Seconds;
-                double totalCost = 0;
 
-                NavNode precedent = new NavNode(0, 0);
+        private string GetFormattedETA(TimeSpan eta)
+        {
+            int days = eta.Days;
+            int hours = eta.Hours;
+            int minutes = eta.Minutes;
 
-                foreach (var genericNode in solution)
-                {
-                    NavNode node = (NavNode) genericNode;
-                    NavMap.SetPixel(node.Y, 300-node.X, currentColor);
-                    if (genericNode != solution[0])
-                    {
-                        totalCost += precedent.GetArcCost(node);
-                        precedent = node;
-                    }
-                    else
-                    {
-                        precedent = node;
-                    }
-                }
-
-                MessageBox.Show($"Le temps total en heure est estimé à {totalCost.ToString()}h.");
-            });
-
-            pictureBox1.Refresh();
-
-            stopwatch.Stop();
-            listBox1.Items.Add($"Recherche terminée!");
-            //listBox1.Items.Add($"Recherche terminée! - {elapsed}s");
-            //listBox1.Items.Add($"Traçage du chemin...");
+            return string.Format(
+                "{0}{1}h et {2}min",
+                days == 0 ? "" : $"{days} jour" + (days > 1 ? "s, " : ", "),
+                hours, minutes);
         }
 
         private void InitializePictureBox()
@@ -152,7 +183,7 @@ namespace _2A2022_Projet_IA
             // Stretches the image to fit the pictureBox.
             pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
 
-            NavMap = new Bitmap(ySize, xSize);
+            NavMap = new Bitmap(xSize, ySize);
 
             for (int x = 0; x < NavMap.Width; x++)
             {
@@ -177,6 +208,8 @@ namespace _2A2022_Projet_IA
                     NavMap.SetPixel(x, y, BackgroundColor);
                 }
             }
+            
+            pictureBox1.Refresh();
         }
 
         private void colorComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -184,5 +217,7 @@ namespace _2A2022_Projet_IA
             Colors c = (Colors) ((ComboBox) sender).SelectedValue;
             CurrentTraceColor = TraceColors[c];
         }
+
+        private void clearButton_Click(object sender, EventArgs e) => ResetPictureBox();
     }
 }

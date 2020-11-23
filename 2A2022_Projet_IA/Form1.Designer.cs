@@ -38,6 +38,8 @@ namespace _2A2022_Projet_IA
             this.colorComboBox = new System.Windows.Forms.ComboBox();
             this.casGroupBox = new System.Windows.Forms.GroupBox();
             this.colorLabel = new System.Windows.Forms.Label();
+            this.clearButton = new System.Windows.Forms.Button();
+            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.casGroupBox.SuspendLayout();
             this.SuspendLayout();
@@ -119,16 +121,33 @@ namespace _2A2022_Projet_IA
             this.colorLabel.TabIndex = 7;
             this.colorLabel.Text = "Couleur du tracé";
             // 
+            // clearButton
+            // 
+            this.clearButton.Location = new System.Drawing.Point(162, 288);
+            this.clearButton.Name = "clearButton";
+            this.clearButton.Size = new System.Drawing.Size(118, 23);
+            this.clearButton.TabIndex = 8;
+            this.clearButton.Text = "Effacer les tracés";
+            this.clearButton.UseVisualStyleBackColor = true;
+            this.clearButton.Click += new System.EventHandler(this.clearButton_Click);
+            // 
+            // backgroundWorker1
+            // 
+            this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(638, 373);
+            this.Controls.Add(this.clearButton);
             this.Controls.Add(this.colorLabel);
             this.Controls.Add(this.casGroupBox);
             this.Controls.Add(this.colorComboBox);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.listBox1);
+            this.MaximumSize = new System.Drawing.Size(654, 412);
+            this.MinimumSize = new System.Drawing.Size(654, 412);
             this.Name = "Form1";
             this.Text = "Form1";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
@@ -148,6 +167,8 @@ namespace _2A2022_Projet_IA
         private System.Windows.Forms.ComboBox colorComboBox;
         private System.Windows.Forms.GroupBox casGroupBox;
         private System.Windows.Forms.Label colorLabel;
+        private System.Windows.Forms.Button clearButton;
+        private System.ComponentModel.BackgroundWorker backgroundWorker1;
     }
 }
 
