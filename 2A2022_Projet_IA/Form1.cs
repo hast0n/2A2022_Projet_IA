@@ -112,11 +112,13 @@ namespace _2A2022_Projet_IA
                 List<GenericNode> solution = g.RechercheSolutionAEtoile(N0);
                 //var elapsed = stopwatch.Elapsed.Seconds;
                 double totalCost = 0;
+
                 NavNode precedent = new NavNode(0, 0);
+
                 foreach (var genericNode in solution)
                 {
                     NavNode node = (NavNode) genericNode;
-                    NavMap.SetPixel(node.X, node.Y, TraceColor);
+                    NavMap.SetPixel(node.X, node.Y, currentColor);
                     if (genericNode != solution[0])
                     {
                         totalCost += precedent.GetArcCost(node);
@@ -127,7 +129,8 @@ namespace _2A2022_Projet_IA
                         precedent = node;
                     }
                 }
-                MessageBox.Show(totalCost.ToString());
+
+                MessageBox.Show($"Le temps total en heure est estimé à {totalCost.ToString()}h.");
             });
 
             pictureBox1.Refresh();
