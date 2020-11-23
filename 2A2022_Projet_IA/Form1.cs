@@ -118,7 +118,7 @@ namespace _2A2022_Projet_IA
                 foreach (var genericNode in solution)
                 {
                     NavNode node = (NavNode) genericNode;
-                    NavMap.SetPixel(node.X, node.Y, currentColor);
+                    NavMap.SetPixel(node.Y, 300-node.X, currentColor);
                     if (genericNode != solution[0])
                     {
                         totalCost += precedent.GetArcCost(node);
@@ -152,7 +152,7 @@ namespace _2A2022_Projet_IA
             // Stretches the image to fit the pictureBox.
             pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
 
-            NavMap = new Bitmap(xSize, ySize);
+            NavMap = new Bitmap(ySize, xSize);
 
             for (int x = 0; x < NavMap.Width; x++)
             {

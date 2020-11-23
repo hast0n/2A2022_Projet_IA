@@ -36,7 +36,7 @@ namespace _2A2022_Projet_IA.Resources
             // get vitesse vent
             double windSpeed = GetWindSpeed(node2);
             // get vitesse bateau
-            double boatSpeed = GetBoatSpeed(alpha, windSpeed);
+            double boatSpeed=0;//              = GetBoatSpeed(alpha, windSpeed);
             // On se ramène à un angle sur 180°
             alpha = alpha > 180 ? 360 - alpha : alpha;
 
