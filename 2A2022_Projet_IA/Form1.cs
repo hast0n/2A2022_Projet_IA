@@ -162,8 +162,8 @@ namespace _2A2022_Projet_IA
 
         private void DisplayStartEndPoint()
         {
-            DrawCircle(PointDepart[0], PointDepart[1], 5, Color.White);
-            DrawCircle(PointArrivee[0], PointArrivee[1], 5, Color.Black);
+            DrawCircle(300-PointDepart[1], PointDepart[0], 5, Color.White);
+            DrawCircle(300-PointArrivee[1], PointArrivee[0], 5, Color.Black);
         }
 
         private string GetFormattedETA(TimeSpan eta)
