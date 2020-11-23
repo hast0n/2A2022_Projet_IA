@@ -88,15 +88,20 @@ namespace _2A2022_Projet_IA.Resources
 
             return lsucc;
         }
+
         public override double CalculeHCost()
         {
-
             NavNode nodeFin = new NavNode(Form1.PointArrivee[0], Form1.PointArrivee[1]);
-            return (GetDistanceEucl(nodeFin) / GetBoatSpeed(GetBoatDirection(nodeFin), GetWindSpeed(this)));
-            //retourner un temps heuristique égal à la distance manhattan / vitesse en ce node
+            var dist = GetDistanceEucl(nodeFin);
+            var time = GetBoatSpeed(GetBoatDirection(nodeFin), GetWindSpeed(this));
 
+            return dist / time;
         }
 
+        private int GetDistanceManh(NavNode N2)
+        {
+            return Math.Abs(N2.X - this.X) + Math.Abs(N2.Y - this.Y);
+        }
 
         private double GetDistanceEucl(NavNode N2)
         {

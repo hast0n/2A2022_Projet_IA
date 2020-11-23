@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using _2A2022_Projet_IA.Resources;
@@ -20,10 +22,21 @@ namespace _2A2022_Projet_IA
         public static int xSize = 300;
         public static int ySize = 300;
 
+        private Stopwatch stopwatch;
+
+        public Color BackgroundColor;
+        public Color TraceColor;
+        public Dictionary<string, Color> TraceColors;
+
         public Form1()
         {
+            BackgroundColor = Color.FromArgb(255, 119, 181, 254);
+            TraceColor = Color.FromArgb(200, 0, 0);
+
             InitializeComponent();
             InitializePictureBox();
+
+            stopwatch = new Stopwatch();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -53,28 +66,43 @@ namespace _2A2022_Projet_IA
             StartNavigation();
         }
 
-        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
         private async void StartNavigation()
         {
+            if (stopwatch.IsRunning)
+            {
+                MessageBox.Show("Veuillez attendre la fin de la recherche avant d'en lancer une autre !",
+                    "Exécution en cours", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return;
+            }
+
             SearchTree g = new SearchTree();
             NavNode N0 = new NavNode(PointDepart[0], PointDepart[1]);
 
+            listBox1.Items.Add($"--- --- --- --- --- --- ");
+            listBox1.Items.Add($"Cas {CasNavigation} chargé!");
+            listBox1.Items.Add($"Lancement de l'A*");
+
+            stopwatch.Reset();
+            stopwatch.Start();
+
             await Task.Run(() =>
             {
+
                 List<GenericNode> solution = g.RechercheSolutionAEtoile(N0);
+                var elapsed = stopwatch.Elapsed.Seconds;
                 
+                listBox1.Items.Add($"Recherche terminée! - {elapsed}s");
+                listBox1.Items.Add($"Traçage du chemin...");
+
                 foreach (var genericNode in solution)
                 {
                     NavNode node = (NavNode) genericNode;
-
-                    Color newColor = Color.FromArgb(200, 0, 0);
-                    NavMap.SetPixel(node.X, node.Y, newColor);
+                    NavMap.SetPixel(node.X, node.Y, TraceColor);
                 }
+
+                listBox1.Items.Add($"Traçage terminé !");
             });
+
         }
 
         private void InitializePictureBox()
@@ -95,20 +123,24 @@ namespace _2A2022_Projet_IA
                 for (int y = 0; y < NavMap.Height; y++)
                 {
                     Color pixelColor = NavMap.GetPixel(x, y);
-                    Color newColor = Color.FromArgb(255, 119, 181, 254);
-                    NavMap.SetPixel(x, y, newColor);
+                    NavMap.SetPixel(x, y, BackgroundColor);
                 }
             }
 
             pictureBox1.ClientSize = new Size(xSize, ySize);
             pictureBox1.Image = NavMap;
-
-            listBox1.Items.Add("pass!");
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void ResetPictureBox()
         {
-
+            for (int x = 0; x < NavMap.Width; x++)
+            {
+                for (int y = 0; y < NavMap.Height; y++)
+                {
+                    Color pixelColor = NavMap.GetPixel(x, y);
+                    NavMap.SetPixel(x, y, BackgroundColor);
+                }
+            }
         }
     }
 }
