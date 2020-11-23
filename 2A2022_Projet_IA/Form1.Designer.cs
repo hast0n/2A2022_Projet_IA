@@ -96,6 +96,7 @@ namespace _2A2022_Projet_IA
             this.colorComboBox.Name = "colorComboBox";
             this.colorComboBox.Size = new System.Drawing.Size(121, 21);
             this.colorComboBox.TabIndex = 5;
+            this.colorComboBox.SelectedIndexChanged += new System.EventHandler(this.colorComboBox_SelectedIndexChanged);
             // 
             // casGroupBox
             // 

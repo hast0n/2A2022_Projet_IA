@@ -15,31 +15,46 @@ namespace _2A2022_Projet_IA
 {
     public partial class Form1 : Form
     {
-        private Bitmap NavMap;
-        public static int CasNavigation;
-        public static int[] PointDepart;
-        public static int[] PointArrivee;
-        public static int xSize = 300;
-        public static int ySize = 300;
+        private Bitmap NavMap { get; set; }
 
-        private Stopwatch stopwatch;
+        public static int CasNavigation { get; private set; }
+        public static int[] PointDepart { get; private set; }
+        public static int[] PointArrivee { get; private set; }
 
-        public Color BackgroundColor;
-        public Color TraceColor;
-        public Dictionary<string, Color> TraceColors;
+        public static int xSize { get; private set; }
+        public static int ySize { get; private set; }
 
-        private enum Colors
+        private Stopwatch stopwatch { get; }
+
+        public Color BackgroundColor { get; }
+        public Color CurrentTraceColor { get; private set; }
+        public Dictionary<Colors, Color> TraceColors { get; }
+
+        public enum Colors
         {
-            Blue, Red, Yellow, Green, Cyan, Magenta, 
+            Blue, Red, Green, Yellow, Black, Magenta
         }
 
         public Form1()
         {
+            xSize = 300;
+            ySize = 300;
+
             BackgroundColor = Color.FromArgb(255, 119, 181, 254);
-            TraceColor = Color.FromArgb(200, 0, 0);
+            TraceColors = new Dictionary<Colors, Color>()
+            {
+                {Colors.Blue, Color.Blue},
+                {Colors.Red, Color.Red},
+                {Colors.Green, Color.Green},
+                {Colors.Yellow, Color.Yellow},
+                {Colors.Black, Color.Black},
+                {Colors.Magenta, Color.Magenta},
+            };
             
             InitializeComponent();
             InitializePictureBox();
+
+            colorComboBox.DataSource = Enum.GetValues(typeof(Colors));
 
             stopwatch = new Stopwatch();
         }
@@ -83,7 +98,7 @@ namespace _2A2022_Projet_IA
             SearchTree g = new SearchTree();
             NavNode N0 = new NavNode(PointDepart[0], PointDepart[1]);
 
-            listBox1.Items.Add(new string('#', 10));
+            listBox1.Items.Add(new string('=', 15));
             listBox1.Items.Add($"Cas {CasNavigation} chargé !");
             listBox1.Items.Add($"Lancement de l'A*");
 
@@ -92,16 +107,21 @@ namespace _2A2022_Projet_IA
 
             await Task.Run(() =>
             {
+                Color currentColor = CurrentTraceColor;
+
                 List<GenericNode> solution = g.RechercheSolutionAEtoile(N0);
                 //var elapsed = stopwatch.Elapsed.Seconds;
 
                 foreach (var genericNode in solution)
                 {
                     NavNode node = (NavNode) genericNode;
-                    NavMap.SetPixel(node.X, node.Y, TraceColor);
+                    NavMap.SetPixel(node.X, node.Y, currentColor);
                 }
             });
 
+            pictureBox1.Refresh();
+
+            stopwatch.Stop();
             listBox1.Items.Add($"Recherche terminée!");
             //listBox1.Items.Add($"Recherche terminée! - {elapsed}s");
             //listBox1.Items.Add($"Traçage du chemin...");
@@ -143,6 +163,12 @@ namespace _2A2022_Projet_IA
                     NavMap.SetPixel(x, y, BackgroundColor);
                 }
             }
+        }
+
+        private void colorComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {  
+            Colors c = (Colors) ((ComboBox) sender).SelectedValue;
+            CurrentTraceColor = TraceColors[c];
         }
     }
 }
