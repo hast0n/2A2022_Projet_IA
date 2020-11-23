@@ -34,7 +34,7 @@ namespace _2A2022_Projet_IA
 
         public enum Colors
         {
-            Blue, Red, Green, Yellow, Black, Magenta
+            Blue, Red, Green, Yellow, Magenta
         }
 
         public Form1()
@@ -49,7 +49,7 @@ namespace _2A2022_Projet_IA
                 {Colors.Red, Color.Red},
                 {Colors.Green, Color.Green},
                 {Colors.Yellow, Color.Yellow},
-                {Colors.Black, Color.Black},
+                //{Colors.Black, Color.Black},
                 {Colors.Magenta, Color.Magenta},
             };
 
@@ -154,11 +154,17 @@ namespace _2A2022_Projet_IA
 
             stopwatch.Reset();
             stopwatch.Start();
-            
+
+            DisplayStartEndPoint();
+
             backgroundWorker1.RunWorkerAsync();
         }
 
-
+        private void DisplayStartEndPoint()
+        {
+            DrawCircle(PointDepart[0], PointDepart[1], 5, Color.White);
+            DrawCircle(PointArrivee[0], PointArrivee[1], 5, Color.Black);
+        }
 
         private string GetFormattedETA(TimeSpan eta)
         {
@@ -219,5 +225,17 @@ namespace _2A2022_Projet_IA
         }
 
         private void clearButton_Click(object sender, EventArgs e) => ResetPictureBox();
+
+        private void DrawCircle(int x, int y, int r, Color color)
+        {
+            double rSquared = Math.Pow(r, 2);
+
+            for (int i = x - (int)r; i <= x + r; i++)
+            for (int j = y - (int)r; j <= y + r; j++)
+                if (Math.Abs(Math.Pow(i - x, 2) + Math.Pow(j - y, 2) - rSquared) <= r)
+                    NavMap.SetPixel(i, j, color);
+
+            pictureBox1.Refresh();
+        }
     }
 }
