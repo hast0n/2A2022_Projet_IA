@@ -110,7 +110,7 @@ namespace _2A2022_Projet_IA
                         precedent = node;
                     }
                 }
-                listBox1.Items.Add($"Coût total : " + totalCost);
+                MessageBox.Show(totalCost.ToString());
             });
 
             listBox1.Items.Add($"Recherche terminée!");
