@@ -81,7 +81,7 @@ namespace _2A2022_Projet_IA
 
             Color currentColor = CurrentTraceColor;
             NavNode precedent = new NavNode(0, 0);
-
+            
             foreach (var genericNode in solution)
             {
                 NavNode node = (NavNode)genericNode;
