@@ -189,7 +189,7 @@ namespace _2A2022_Projet_IA.Resources
 
         private double GetBoatDirection(NavNode node2)
         {
-            double a = Math.Atan2(node2.Y - this.Y, node2.X - this.X) * 180 / Math.PI;
+            double a = Math.Atan2(node2.Y - this.Y, node2.X - this.X ==0 ? 0.0001: node2.X - this.X) * 180 / Math.PI;
             return a < 0 ? a + 360 : a;
         }
         
