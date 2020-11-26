@@ -21,6 +21,8 @@ namespace _2A2022_Projet_IA
         public static int[] PointDepart { get; private set; }
         public static int[] PointArrivee { get; private set; }
 
+        private NavNode.Heuristic currentHeuristic { get; set; }
+
         public double TotalCost { get; private set; }
 
         public static int xSize { get; private set; }
@@ -60,6 +62,7 @@ namespace _2A2022_Projet_IA
             backgroundWorker1.RunWorkerCompleted += backgroundWorker1_RunWorkerCompleted;
             
             colorComboBox.DataSource = Enum.GetValues(typeof(Colors));
+            hComboBox.DataSource = Enum.GetValues(typeof(NavNode.Heuristic));
 
             stopwatch = new Stopwatch();
         }
@@ -70,6 +73,8 @@ namespace _2A2022_Projet_IA
         {
             SearchTree g = new SearchTree();
             NavNode N0 = new NavNode(PointDepart[0], PointDepart[1]);
+
+            NavNode.HeuristicMethod = currentHeuristic;
 
             List<GenericNode> solution = g.RechercheSolutionAEtoile(N0);
             double totalCost = 0;
@@ -99,7 +104,7 @@ namespace _2A2022_Projet_IA
         {
             stopwatch.Stop();
 
-            pictureBox1.Refresh();
+            DisplayStartEndPoint(); // possiblement effacés par utilisateur
 
             TimeSpan ETA = TimeSpan.FromHours(TotalCost);
             string ETAString = GetFormattedETA(ETA);
@@ -160,12 +165,16 @@ namespace _2A2022_Projet_IA
             backgroundWorker1.RunWorkerAsync();
         }
 
+        
+
         private void DisplayStartEndPoint()
         {
             DrawCircle(300-PointDepart[1], PointDepart[0], 5, Color.White);
             DrawCircle(300-PointArrivee[1], PointArrivee[0], 5, Color.Black);
-        }
 
+            pictureBox1.Refresh();
+        }
+        
         private string GetFormattedETA(TimeSpan eta)
         {
             int days = eta.Days;
@@ -234,8 +243,11 @@ namespace _2A2022_Projet_IA
             for (int j = y - (int)r; j <= y + r; j++)
                 if (Math.Abs(Math.Pow(i - x, 2) + Math.Pow(j - y, 2) - rSquared) <= r)
                     NavMap.SetPixel(i, j, color);
+        }
 
-            pictureBox1.Refresh();
+        private void hComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            currentHeuristic = (NavNode.Heuristic) ((ComboBox) sender).SelectedValue;
         }
     }
 }
