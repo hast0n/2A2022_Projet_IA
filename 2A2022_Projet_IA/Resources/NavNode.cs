@@ -15,8 +15,6 @@ namespace _2A2022_Projet_IA.Resources
         {
             EuclidianDistance, 
             ManhattanDistance,
-            WeightedDistance,
-            WeightedTime
         }
 
         public NavNode(int x, int y)
@@ -95,7 +93,7 @@ namespace _2A2022_Projet_IA.Resources
 
                 //new[] {-1,  1}, new[] {0,  1}, new[] {1,  1},
                 //new[] {-1,  0},                new[] {1,  0},
-                //new[] {-1, -1}, new[] {0, -1}, new[] {1, -1}
+                //new[] {-1, -1}, new[] {0, -1}, new[] {1, -1},
                
                 //new[] {-4,  4}, new[] {-3,  4}, new[] {-2,  4}, new[] {-1,  4}, new[] {0,  4}, new[] {1,  4}, new[] {2,  4}, new[] {3,  4}, new[] {4,  4},
                 //new[] {-4,  3}, new[] {-3,  3}, new[] {-2,  3}, new[] {-1,  3}, new[] {0,  3}, new[] {1,  3}, new[] {2,  3}, new[] {3,  3}, new[] {4,  3},
@@ -172,18 +170,10 @@ namespace _2A2022_Projet_IA.Resources
                     dist = GetDistanceManh(nodeFin);
                     speed = GetBoatSpeed(GetBoatDirection(nodeFin), GetWindSpeed(this));
                     break;
-                case Heuristic.WeightedDistance:
-                    dist = GetDistanceEucl(nodeFin);
-                    speed = GetBoatSpeed(GetBoatDirection(nodeFin), GetWindSpeed(this));
-                    break;
-                case Heuristic.WeightedTime:
-                    dist = GetDistanceManh(nodeFin);
-                    speed = GetBoatSpeed(GetBoatDirection(nodeFin), GetWindSpeed(this));
-                    break;
             }
 
             if (speed == 0) return WrongInput;
-            return dist / speed;
+            return dist / speed + dist;
         }
         
         private int GetDistanceManh(NavNode N2)
