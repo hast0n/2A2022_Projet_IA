@@ -21,6 +21,7 @@ namespace _2A2022_Projet_IA
         public static int ActionAngle { get; private set; }
         public static int[] PointDepart { get; private set; }
         public static int[] PointArrivee { get; private set; }
+        public static List<GenericNode> Solution { get; private set; }
 
         private NavNode.Heuristic currentHeuristic { get; set; }
 
@@ -79,16 +80,57 @@ namespace _2A2022_Projet_IA
 
             NavNode.HeuristicMethod = currentHeuristic;
 
-            List<GenericNode> solution = g.RechercheSolutionAEtoile(N0);
-            double totalCost = 0;
+            Solution = g.RechercheSolutionAEtoile(N0);
+        }
 
-            Color currentColor = CurrentTraceColor;
-            NavNode precedent = new NavNode(0, 0);
+        private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            stopwatch.Stop();
+            DisplayStartEndPoint(); // possiblement effacés par utilisateur
+
+            GetSolutionTimeCost(Solution);
+            DisplayBoatPath(Solution);
             
+            TimeSpan ETA = TimeSpan.FromHours(TotalCost);
+            string ETAString = GetFormattedETA(ETA);
+
+            listBox1.Items.Add("Recherche terminée");
+            listBox1.Items.Add($"Temps d'exécution : {stopwatch.Elapsed.Seconds}s");
+            listBox1.Items.Add($"ETA: {ETAString}");
+        }
+
+
+
+        private void DisplayBoatPath(List<GenericNode> solution)
+        {
+            Color currentColor = CurrentTraceColor;
+
+            Graphics g = pictureBox1.CreateGraphics();
+            Pen pen = new Pen(currentColor);
+
+            NavNode pnode = (NavNode) Solution[0];
+
             foreach (var genericNode in solution)
             {
                 NavNode node = (NavNode)genericNode;
-                NavMap.SetPixel( 300-node.Y, node.X, currentColor);
+
+                g.DrawLine(pen,
+                    new Point(pnode.X, pictureBox1.Height - pnode.Y),
+                    new Point(node.X, pictureBox1.Height - node.Y));
+                
+                pnode = node;
+            }
+        }
+
+        private void GetSolutionTimeCost(List<GenericNode> solution)
+        {
+            NavNode precedent = new NavNode(0, 0);
+            double totalCost = 0;
+
+            foreach (var genericNode in solution)
+            {
+                NavNode node = (NavNode)genericNode;
+
                 if (genericNode != solution[0])
                 {
                     totalCost += precedent.GetArcCost(node);
@@ -99,22 +141,7 @@ namespace _2A2022_Projet_IA
                     precedent = node;
                 }
             }
-
             TotalCost = totalCost;
-        }
-
-        private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            stopwatch.Stop();
-
-            DisplayStartEndPoint(); // possiblement effacés par utilisateur
-
-            TimeSpan ETA = TimeSpan.FromHours(TotalCost);
-            string ETAString = GetFormattedETA(ETA);
-
-            listBox1.Items.Add("Recherche terminée");
-            listBox1.Items.Add($"Temps d'exécution : {stopwatch.Elapsed.Seconds}s");
-            listBox1.Items.Add($"ETA: {ETAString}");
         }
 
 
