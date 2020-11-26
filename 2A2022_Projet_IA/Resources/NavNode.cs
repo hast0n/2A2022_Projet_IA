@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 
 namespace _2A2022_Projet_IA.Resources
 {
@@ -106,11 +107,11 @@ namespace _2A2022_Projet_IA.Resources
                 //new[] {-4, -3}, new[] {-3, -3}, new[] {-2, -3}, new[] {-1, -3}, new[] {0, -3}, new[] {1, -3}, new[] {2, -3}, new[] {3, -3}, new[] {4, -3},
                 //new[] {-4, -4}, new[] {-3, -4}, new[] {-2, -4}, new[] {-1, -4}, new[] {0, -4}, new[] {1, -4}, new[] {2, -4}, new[] {3, -4}, new[] {4, -4}
                         
-                new[] {-4,  4}, new[] {-2,  4}, new[] {0,  4}, new[] {2,  4}, new[] {4,  4},
-                new[] {-4,  2},                                               new[] {4,  2},
-                new[] {-4,  0},                                               new[] {4,  0},
-                new[] {-4, -2},                                               new[] {4, -2},
-                new[] {-4, -4}, new[] {-2, -4}, new[] {0, -4}, new[] {2, -4}, new[] {4, -4}
+                //new[] {-4,  4}, new[] {-2,  4}, new[] {0,  4}, new[] {2,  4}, new[] {4,  4},
+                //new[] {-4,  2},                                               new[] {4,  2},
+                //new[] {-4,  0},                                               new[] {4,  0},
+                //new[] {-4, -2},                                               new[] {4, -2},
+                //new[] {-4, -4}, new[] {-2, -4}, new[] {0, -4}, new[] {2, -4}, new[] {4, -4}
 
 
                 //new[] {-4,  4}, new[] {-3,  4}, new[] {-2,  4}, new[] {-1,  4}, new[] {0,  4}, new[] {1,  4}, new[] {2,  4}, new[] {3,  4}, new[] {4,  4},
@@ -123,16 +124,33 @@ namespace _2A2022_Projet_IA.Resources
                 //new[] {-4, -3},                                                                                                             new[] {4, -3},
                 //new[] {-4, -4}, new[] {-3, -4}, new[] {-2, -4}, new[] {-1, -4}, new[] {0, -4}, new[] {1, -4}, new[] {2, -4}, new[] {3, -4}, new[] {4, -4}
 
+
+                                 new[] {-1,  2},                new[] {1,  2},
+                 new[] {-2,  1}, new[] {-1,  1}, new[] {0,  1}, new[] {1,  1}, new[] {2,  1},
+                                 new[] {-1,  0},                new[] {1,  0},
+                 new[] {-2, -1}, new[] {-1, -1}, new[] {0, -1}, new[] {1, -1}, new[] {2, -1},
+                                 new[] {-1, -2},                new[] {1, -2},
+
             };
+
+            double alpha = GetBoatDirection(nodeFin);
+            double actA = Form1.ActionAngle;
 
             foreach (var coord in succCoords)
             {
                 int newX = this.X + coord[0];
                 int newY = this.Y + coord[1];
 
-                if (newX >= 1 && newX <= Form1.xSize &&
-                    newY >= 1 && newY <= Form1.ySize)
-                    lsucc.Add(new NavNode(newX, newY));
+                double b = GetAngle(newX, newY);
+
+                double angleDiff = (alpha - b + 180 + 360) % 360 - 180;
+
+                if (angleDiff <= actA/2 && angleDiff >= -actA/2)
+                {
+                    if (newX >= 1 && newX <= Form1.xSize &&
+                        newY >= 1 && newY <= Form1.ySize)
+                        lsucc.Add(new NavNode(newX, newY));
+                }
             }
 
             return lsucc;
@@ -155,23 +173,17 @@ namespace _2A2022_Projet_IA.Resources
                     speed = GetBoatSpeed(GetBoatDirection(nodeFin), GetWindSpeed(this));
                     break;
                 case Heuristic.WeightedDistance:
-                    dist = 10 * GetDistanceEucl(nodeFin);
+                    dist = GetDistanceEucl(nodeFin);
                     speed = GetBoatSpeed(GetBoatDirection(nodeFin), GetWindSpeed(this));
                     break;
                 case Heuristic.WeightedTime:
                     dist = GetDistanceManh(nodeFin);
-                    speed = 10 * GetBoatSpeed(GetBoatDirection(nodeFin), GetWindSpeed(this));
+                    speed = GetBoatSpeed(GetBoatDirection(nodeFin), GetWindSpeed(this));
                     break;
             }
 
-            try
-            {
-                return dist / speed;
-            }
-            catch (DivideByZeroException)
-            {
-                return WrongInput;
-            }
+            if (speed == 0) return WrongInput;
+            return dist / speed;
         }
         
         private int GetDistanceManh(NavNode N2)
@@ -189,34 +201,33 @@ namespace _2A2022_Projet_IA.Resources
 
         private double GetBoatDirection(NavNode node2)
         {
-            double a = Math.Atan2(node2.Y - this.Y, node2.X - this.X ==0 ? 0.0001: node2.X - this.X) * 180 / Math.PI;
+            return GetAngle(node2.X, node2.Y);
+        }
+
+        private double GetAngle(int x2, int y2)
+        {
+            double a = Math.Atan2(y2 - this.Y, x2 - this.X) * 180 / Math.PI;
             return a < 0 ? a + 360 : a;
         }
         
         private double GetBoatSpeed(double alpha, double VitVent)
         {
-            if (alpha>= 0 && alpha<=45)
+            if (alpha >= 0 && alpha < 45)
             {
-                return ((0.6 + 0.3 * alpha / 45) * VitVent);
+                return (0.6 + 0.3 * alpha / 45) * VitVent;
             }
-            else
+
+            if (alpha >= 45 && alpha < 90)
             {
-                if (alpha > 45 && alpha <= 90)
-                {
-                    return ((0.9 - 0.2 * (alpha - 45)/45) * VitVent);
-                }
-                else
-                {
-                    if (alpha > 90 && alpha <= 150)
-                    {
-                        return (0.7 *(1- (alpha-90) / 60) * VitVent);
-                    }
-                    else
-                    {
-                        return (0);
-                    }
-                }
+                return (0.9 - 0.2 * (alpha - 45)/45) * VitVent;
             }
+            
+            if (alpha >= 90 && alpha < 150)
+            {
+                return 0.7 *(1- (alpha-90) / 60) * VitVent;
+            }
+
+            return 0;
         }
 
         private double GetWindDirection(NavNode N2)

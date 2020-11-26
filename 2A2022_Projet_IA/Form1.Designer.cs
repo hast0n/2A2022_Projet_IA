@@ -42,8 +42,11 @@ namespace _2A2022_Projet_IA
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.hLabel = new System.Windows.Forms.Label();
             this.hComboBox = new System.Windows.Forms.ComboBox();
+            this.angleLabel = new System.Windows.Forms.Label();
+            this.angleNumericUpDown = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.casGroupBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.angleNumericUpDown)).BeginInit();
             this.SuspendLayout();
             // 
             // listBox1
@@ -87,7 +90,7 @@ namespace _2A2022_Projet_IA
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Location = new System.Drawing.Point(299, 36);
+            this.pictureBox1.Location = new System.Drawing.Point(326, 12);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(300, 300);
             this.pictureBox1.TabIndex = 4;
@@ -96,7 +99,7 @@ namespace _2A2022_Projet_IA
             // colorComboBox
             // 
             this.colorComboBox.FormattingEnabled = true;
-            this.colorComboBox.Location = new System.Drawing.Point(159, 242);
+            this.colorComboBox.Location = new System.Drawing.Point(159, 306);
             this.colorComboBox.Name = "colorComboBox";
             this.colorComboBox.Size = new System.Drawing.Size(121, 21);
             this.colorComboBox.TabIndex = 5;
@@ -117,7 +120,7 @@ namespace _2A2022_Projet_IA
             // colorLabel
             // 
             this.colorLabel.AutoSize = true;
-            this.colorLabel.Location = new System.Drawing.Point(159, 226);
+            this.colorLabel.Location = new System.Drawing.Point(159, 290);
             this.colorLabel.Name = "colorLabel";
             this.colorLabel.Size = new System.Drawing.Size(85, 13);
             this.colorLabel.TabIndex = 7;
@@ -125,7 +128,7 @@ namespace _2A2022_Projet_IA
             // 
             // clearButton
             // 
-            this.clearButton.Location = new System.Drawing.Point(162, 288);
+            this.clearButton.Location = new System.Drawing.Point(508, 338);
             this.clearButton.Name = "clearButton";
             this.clearButton.Size = new System.Drawing.Size(118, 23);
             this.clearButton.TabIndex = 8;
@@ -155,11 +158,40 @@ namespace _2A2022_Projet_IA
             this.hComboBox.TabIndex = 10;
             this.hComboBox.SelectedIndexChanged += new System.EventHandler(this.hComboBox_SelectedIndexChanged);
             // 
+            // angleLabel
+            // 
+            this.angleLabel.AutoSize = true;
+            this.angleLabel.Location = new System.Drawing.Point(162, 230);
+            this.angleLabel.Name = "angleLabel";
+            this.angleLabel.Size = new System.Drawing.Size(87, 13);
+            this.angleLabel.TabIndex = 11;
+            this.angleLabel.Text = "Angle d\'action (°)";
+            // 
+            // angleNumericUpDown
+            // 
+            this.angleNumericUpDown.Location = new System.Drawing.Point(159, 247);
+            this.angleNumericUpDown.Maximum = new decimal(new int[] {
+            360,
+            0,
+            0,
+            0});
+            this.angleNumericUpDown.Name = "angleNumericUpDown";
+            this.angleNumericUpDown.Size = new System.Drawing.Size(120, 20);
+            this.angleNumericUpDown.TabIndex = 12;
+            this.angleNumericUpDown.Value = new decimal(new int[] {
+            180,
+            0,
+            0,
+            0});
+            this.angleNumericUpDown.ValueChanged += new System.EventHandler(this.angleNumericUpDown_ValueChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(638, 373);
+            this.Controls.Add(this.angleNumericUpDown);
+            this.Controls.Add(this.angleLabel);
             this.Controls.Add(this.hComboBox);
             this.Controls.Add(this.hLabel);
             this.Controls.Add(this.clearButton);
@@ -174,6 +206,7 @@ namespace _2A2022_Projet_IA
             this.Text = "Form1";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.casGroupBox.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.angleNumericUpDown)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -193,6 +226,8 @@ namespace _2A2022_Projet_IA
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.Label hLabel;
         private System.Windows.Forms.ComboBox hComboBox;
+        private System.Windows.Forms.Label angleLabel;
+        private System.Windows.Forms.NumericUpDown angleNumericUpDown;
     }
 }
 

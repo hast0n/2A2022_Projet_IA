@@ -18,6 +18,7 @@ namespace _2A2022_Projet_IA
         private Bitmap NavMap { get; set; }
 
         public static int CasNavigation { get; private set; }
+        public static int ActionAngle { get; private set; }
         public static int[] PointDepart { get; private set; }
         public static int[] PointArrivee { get; private set; }
 
@@ -43,6 +44,8 @@ namespace _2A2022_Projet_IA
         {
             xSize = 300;
             ySize = 300;
+
+            ActionAngle = 180;
 
             BackgroundColor = Color.FromArgb(255, 119, 181, 254);
             TraceColors = new Dictionary<Colors, Color>()
@@ -248,6 +251,11 @@ namespace _2A2022_Projet_IA
         private void hComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             currentHeuristic = (NavNode.Heuristic) ((ComboBox) sender).SelectedValue;
+        }
+
+        private void angleNumericUpDown_ValueChanged(object sender, EventArgs e)
+        {
+            ActionAngle = (int) ((NumericUpDown) sender).Value;
         }
     }
 }
