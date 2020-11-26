@@ -8,6 +8,16 @@ namespace _2A2022_Projet_IA.Resources
         public int X, Y;
         private const int WrongInput = 1000000;
 
+        public static Heuristic HeuristicMethod;
+
+        public enum Heuristic
+        {
+            EuclidianDistance, 
+            ManhattanDistance,
+            WeightedDistance,
+            WeightedTime
+        }
+
         public NavNode(int x, int y)
         {
             this.X = x;
@@ -63,6 +73,8 @@ namespace _2A2022_Projet_IA.Resources
 
         public override List<GenericNode> GetListSucc()
         {
+            NavNode nodeFin = new NavNode(Form1.PointArrivee[0], Form1.PointArrivee[1]);
+
             List<GenericNode> lsucc = new List<GenericNode>();
 
             int[][] succCoords = new int[][]
@@ -88,13 +100,39 @@ namespace _2A2022_Projet_IA.Resources
         public override double CalculeHCost()
         {
             NavNode nodeFin = new NavNode(Form1.PointArrivee[0], Form1.PointArrivee[1]);
+            double dist = 0;
+            double speed = 0;
 
-            var dist = GetDistanceEucl(nodeFin);
-            var time = GetBoatSpeed(GetBoatDirection(nodeFin), GetWindSpeed(this));
+            switch (HeuristicMethod)
+            {
+                case Heuristic.EuclidianDistance:
+                    dist = GetDistanceEucl(nodeFin);
+                    speed = GetBoatSpeed(GetBoatDirection(nodeFin), GetWindSpeed(this));
+                    break;
+                case Heuristic.ManhattanDistance:
+                    dist = GetDistanceManh(nodeFin);
+                    speed = GetBoatSpeed(GetBoatDirection(nodeFin), GetWindSpeed(this));
+                    break;
+                case Heuristic.WeightedDistance:
+                    dist = 10 * GetDistanceEucl(nodeFin);
+                    speed = GetBoatSpeed(GetBoatDirection(nodeFin), GetWindSpeed(this));
+                    break;
+                case Heuristic.WeightedTime:
+                    dist = GetDistanceManh(nodeFin);
+                    speed = 10 * GetBoatSpeed(GetBoatDirection(nodeFin), GetWindSpeed(this));
+                    break;
+            }
 
-            return dist / time;
+            try
+            {
+                return dist / speed;
+            }
+            catch (DivideByZeroException)
+            {
+                return WrongInput;
+            }
         }
-
+        
         private int GetDistanceManh(NavNode N2)
         {
             return Math.Abs(N2.X - this.X) + Math.Abs(N2.Y - this.Y);

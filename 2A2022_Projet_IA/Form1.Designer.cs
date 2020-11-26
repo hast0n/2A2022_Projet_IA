@@ -40,6 +40,8 @@ namespace _2A2022_Projet_IA
             this.colorLabel = new System.Windows.Forms.Label();
             this.clearButton = new System.Windows.Forms.Button();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.hLabel = new System.Windows.Forms.Label();
+            this.hComboBox = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.casGroupBox.SuspendLayout();
             this.SuspendLayout();
@@ -94,7 +96,7 @@ namespace _2A2022_Projet_IA
             // colorComboBox
             // 
             this.colorComboBox.FormattingEnabled = true;
-            this.colorComboBox.Location = new System.Drawing.Point(159, 226);
+            this.colorComboBox.Location = new System.Drawing.Point(159, 242);
             this.colorComboBox.Name = "colorComboBox";
             this.colorComboBox.Size = new System.Drawing.Size(121, 21);
             this.colorComboBox.TabIndex = 5;
@@ -115,7 +117,7 @@ namespace _2A2022_Projet_IA
             // colorLabel
             // 
             this.colorLabel.AutoSize = true;
-            this.colorLabel.Location = new System.Drawing.Point(159, 207);
+            this.colorLabel.Location = new System.Drawing.Point(159, 226);
             this.colorLabel.Name = "colorLabel";
             this.colorLabel.Size = new System.Drawing.Size(85, 13);
             this.colorLabel.TabIndex = 7;
@@ -135,11 +137,31 @@ namespace _2A2022_Projet_IA
             // 
             this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
             // 
+            // hLabel
+            // 
+            this.hLabel.AutoSize = true;
+            this.hLabel.Location = new System.Drawing.Point(159, 175);
+            this.hLabel.Name = "hLabel";
+            this.hLabel.Size = new System.Drawing.Size(60, 13);
+            this.hLabel.TabIndex = 9;
+            this.hLabel.Text = "Heuristique";
+            // 
+            // hComboBox
+            // 
+            this.hComboBox.FormattingEnabled = true;
+            this.hComboBox.Location = new System.Drawing.Point(159, 192);
+            this.hComboBox.Name = "hComboBox";
+            this.hComboBox.Size = new System.Drawing.Size(121, 21);
+            this.hComboBox.TabIndex = 10;
+            this.hComboBox.SelectedIndexChanged += new System.EventHandler(this.hComboBox_SelectedIndexChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(638, 373);
+            this.Controls.Add(this.hComboBox);
+            this.Controls.Add(this.hLabel);
             this.Controls.Add(this.clearButton);
             this.Controls.Add(this.colorLabel);
             this.Controls.Add(this.casGroupBox);
@@ -169,6 +191,8 @@ namespace _2A2022_Projet_IA
         private System.Windows.Forms.Label colorLabel;
         private System.Windows.Forms.Button clearButton;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
+        private System.Windows.Forms.Label hLabel;
+        private System.Windows.Forms.ComboBox hComboBox;
     }
 }
 
