@@ -151,6 +151,13 @@ namespace _2A2022_Projet_IA
 
         private void button1_Click(object sender, EventArgs e)
         {
+            if (stopwatch.IsRunning)
+            {
+                MessageBox.Show("Veuillez attendre la fin de la recherche avant d'en lancer une autre !",
+                    "Exécution en cours", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return;
+            }
+
             CasNavigation = 1;
             PointDepart = new[] {100, 200};
             PointArrivee = new[] {200, 100};
@@ -160,6 +167,13 @@ namespace _2A2022_Projet_IA
 
         private void button2_Click(object sender, EventArgs e)
         {
+            if (stopwatch.IsRunning)
+            {
+                MessageBox.Show("Veuillez attendre la fin de la recherche avant d'en lancer une autre !",
+                    "Exécution en cours", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return;
+            }
+
             CasNavigation = 2;
             PointDepart = new[] { 100, 200 };
             PointArrivee = new[] { 200, 100 };
@@ -169,6 +183,13 @@ namespace _2A2022_Projet_IA
 
         private void button3_Click(object sender, EventArgs e)
         {
+            if (stopwatch.IsRunning)
+            {
+                MessageBox.Show("Veuillez attendre la fin de la recherche avant d'en lancer une autre !",
+                    "Exécution en cours", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return;
+            }
+
             CasNavigation = 3;
             PointDepart = new[] { 200, 100 };
             PointArrivee = new[] { 100, 200 };
@@ -178,13 +199,6 @@ namespace _2A2022_Projet_IA
 
         private void StartNavigation()
         {
-            if (stopwatch.IsRunning)
-            {
-                MessageBox.Show("Veuillez attendre la fin de la recherche avant d'en lancer une autre !",
-                    "Exécution en cours", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                return;
-            }
-
             listBox1.Items.Add(new string('=', 20));
             listBox1.Items.Add($"Cas {CasNavigation} chargé !");
             listBox1.Items.Add($"Lancement de l'A*");

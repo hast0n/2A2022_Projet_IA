@@ -112,7 +112,6 @@ namespace _2A2022_Projet_IA.Resources
                 new[] {-2, -1},                                               new[] {2, -1},
                 new[] {-2, -2}, new[] {-1, -2}, new[] {0, -2}, new[] {1, -2}, new[] {2, -2}
 
-
                 //new[] {-4,  4}, new[] {-3,  4}, new[] {-2,  4}, new[] {-1,  4}, new[] {0,  4}, new[] {1,  4}, new[] {2,  4}, new[] {3,  4}, new[] {4,  4},
                 //new[] {-4,  3},                                                                                                             new[] {4,  3},
                 //new[] {-4,  2},                                                                                                             new[] {4,  2},
@@ -122,14 +121,12 @@ namespace _2A2022_Projet_IA.Resources
                 //new[] {-4, -2},                                                                                                             new[] {4, -2},
                 //new[] {-4, -3},                                                                                                             new[] {4, -3},
                 //new[] {-4, -4}, new[] {-3, -4}, new[] {-2, -4}, new[] {-1, -4}, new[] {0, -4}, new[] {1, -4}, new[] {2, -4}, new[] {3, -4}, new[] {4, -4}
-
-
+                
                  //                new[] {-1,  2},                new[] {1,  2},
                  //new[] {-2,  1}, new[] {-1,  1}, new[] {0,  1}, new[] {1,  1}, new[] {2,  1},
                  //                new[] {-1,  0},                new[] {1,  0},
                  //new[] {-2, -1}, new[] {-1, -1}, new[] {0, -1}, new[] {1, -1}, new[] {2, -1},
                  //                new[] {-1, -2},                new[] {1, -2},
-
             };
 
             double alpha = GetBoatDirection(nodeFin);
