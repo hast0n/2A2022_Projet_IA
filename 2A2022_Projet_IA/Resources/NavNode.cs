@@ -13,8 +13,8 @@ namespace _2A2022_Projet_IA.Resources
 
         public enum Heuristic
         {
-            EuclidianDistance, 
-            ManhattanDistance,
+            ClassicTime,
+            WeightedDistance
         }
 
         public NavNode(int x, int y)
@@ -90,9 +90,9 @@ namespace _2A2022_Projet_IA.Resources
                 //new[] {-2,  0},                new[] {2,  0},
                 //new[] {-2, -2}, new[] {0, -2}, new[] {2, -2}
 
-                new[] {-1,  1}, new[] {0,  1}, new[] {1,  1},
-                new[] {-1,  0},                new[] {1,  0},
-                new[] {-1, -1}, new[] {0, -1}, new[] {1, -1},
+                //new[] {-1,  1}, new[] {0,  1}, new[] {1,  1},
+                //new[] {-1,  0},                new[] {1,  0},
+                //new[] {-1, -1}, new[] {0, -1}, new[] {1, -1},
                
                 //new[] {-4,  4}, new[] {-3,  4}, new[] {-2,  4}, new[] {-1,  4}, new[] {0,  4}, new[] {1,  4}, new[] {2,  4}, new[] {3,  4}, new[] {4,  4},
                 //new[] {-4,  3}, new[] {-3,  3}, new[] {-2,  3}, new[] {-1,  3}, new[] {0,  3}, new[] {1,  3}, new[] {2,  3}, new[] {3,  3}, new[] {4,  3},
@@ -104,11 +104,11 @@ namespace _2A2022_Projet_IA.Resources
                 //new[] {-4, -3}, new[] {-3, -3}, new[] {-2, -3}, new[] {-1, -3}, new[] {0, -3}, new[] {1, -3}, new[] {2, -3}, new[] {3, -3}, new[] {4, -3},
                 //new[] {-4, -4}, new[] {-3, -4}, new[] {-2, -4}, new[] {-1, -4}, new[] {0, -4}, new[] {1, -4}, new[] {2, -4}, new[] {3, -4}, new[] {4, -4}
                         
-                //new[] {-2,  2}, new[] {-1,  2}, new[] {0,  2}, new[] {1,  2}, new[] {2,  2},
-                //new[] {-2,  1},                                               new[] {2,  1},
-                //new[] {-2,  0},                                               new[] {2,  0},
-                //new[] {-2, -1},                                               new[] {2, -1},
-                //new[] {-2, -2}, new[] {-1, -2}, new[] {0, -2}, new[] {1, -2}, new[] {2, -2}
+                new[] {-2,  2}, new[] {-1,  2}, new[] {0,  2}, new[] {1,  2}, new[] {2,  2},
+                new[] {-2,  1},                                               new[] {2,  1},
+                new[] {-2,  0},                                               new[] {2,  0},
+                new[] {-2, -1},                                               new[] {2, -1},
+                new[] {-2, -2}, new[] {-1, -2}, new[] {0, -2}, new[] {1, -2}, new[] {2, -2}
 
 
                 //new[] {-4,  4}, new[] {-3,  4}, new[] {-2,  4}, new[] {-1,  4}, new[] {0,  4}, new[] {1,  4}, new[] {2,  4}, new[] {3,  4}, new[] {4,  4},
@@ -156,23 +156,23 @@ namespace _2A2022_Projet_IA.Resources
         public override double CalculeHCost()
         {
             NavNode nodeFin = new NavNode(Form1.PointArrivee[0], Form1.PointArrivee[1]);
-            double dist = 0;
-            double speed = 0;
+
+            double speed = GetBoatSpeed(GetBoatDirection(nodeFin), GetWindSpeed(this));
+            double dist = GetDistanceEucl(nodeFin);
+            double heuristic = 0;
 
             switch (HeuristicMethod)
             {
-                case Heuristic.EuclidianDistance:
-                    dist = GetDistanceEucl(nodeFin);
-                    speed = GetBoatSpeed(GetBoatDirection(nodeFin), GetWindSpeed(this));
+                case Heuristic.ClassicTime:
+                    heuristic = dist / speed;
                     break;
-                case Heuristic.ManhattanDistance:
-                    dist = GetDistanceManh(nodeFin);
-                    speed = GetBoatSpeed(GetBoatDirection(nodeFin), GetWindSpeed(this));
+                case Heuristic.WeightedDistance:
+                    heuristic = dist / speed + Math.Pow(dist, 2);
                     break;
             }
 
             if (speed == 0) return WrongInput;
-            return dist / speed + Math.Pow(dist, 2);
+            return heuristic;
         }
         
         private int GetDistanceManh(NavNode N2)

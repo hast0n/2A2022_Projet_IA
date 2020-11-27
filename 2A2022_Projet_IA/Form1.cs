@@ -266,7 +266,7 @@ namespace _2A2022_Projet_IA
 
         private void clearButton_Click(object sender, EventArgs e) => ResetPictureBox();
 
-        private void DrawCircle(int x, int y, int r, Color color)
+        private void DrawCircle(int x, int y, int r, Color color) 
         {
             double rSquared = Math.Pow(r, 2);
             Pen pen = new Pen(color);
