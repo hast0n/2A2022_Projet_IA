@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
+using System.Windows.Forms;
 
 namespace _2A2022_Projet_IA.Resources
 {
@@ -13,10 +14,14 @@ namespace _2A2022_Projet_IA.Resources
 
         public enum Heuristic
         {
-            Null,
+            //Null,
             ClassicTime,
-            WeightedSquareSpeed,
-            WeightedSquareDistance
+            WeightedDistance
+            //WeightedSquareSpeed,
+            //WeightedSquareDistance
+
+            //EuclidianDistance,
+            //ManhattanDistance
         }
 
         public NavNode(int x, int y)
@@ -33,25 +38,66 @@ namespace _2A2022_Projet_IA.Resources
 
         public override double GetArcCost(GenericNode N2)
         {
-            NavNode node2 = (NavNode) N2;
-            double distance = GetDistanceEucl(node2);
+            NavNode node2 = (NavNode)N2;
 
-            if (distance > 10) return WrongInput;
-            
-            // get alpha l'angle entre bateau et vent
-            double alpha = Math.Abs(GetBoatDirection(node2) - GetWindDirection(node2));
-            if (alpha == WrongInput) return alpha;
+            int x1 = this.X;
+            int y1 = this.Y;
+            int x2 = node2.X;
+            int y2 = node2.Y;
 
-            alpha = alpha > 180 ? 360 - alpha : alpha;
-
-            // get vitesse vent
-            double windSpeed = GetWindSpeed(node2);
-
-            // get vitesse bateau
-            double boatSpeed = GetBoatSpeed(alpha, windSpeed);
-
+            double distance = Math.Sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
+            if (distance > 10) return 1000000;
+            double windspeed = GetWindSpeed(node2);
+            double winddirection = GetWindDirection(node2);
+            double boatspeed;
+            double boatdirection = Math.Atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
+            // On ramène entre 0 et 360
+            if (boatdirection < 0) boatdirection = boatdirection + 360;
+            // calcul de la différence angulaire
+            double alpha = Math.Abs(boatdirection - winddirection);
+            // On se ramène à une différence entre 0 et 180 :
+            if (alpha > 180) alpha = 360 - alpha;
+            if (alpha <= 45)
+            {
+                /* (0.6 + 0.3α / 45) v_v */
+                boatspeed = (0.6 + 0.3 * alpha / 45) * windspeed;
+            }
+            else if (alpha <= 90)
+            {
+                /*v_b=(0.9-0.2(α-45)/45) v_v */
+                boatspeed = (0.9 - 0.2 * (alpha - 45) / 45) * windspeed;
+            }
+            else if (alpha < 150)
+            {
+                /* v_b=0.7(1-(α-90)/60) v_v */
+                boatspeed = 0.7 * (1 - (alpha - 90) / 60) * windspeed;
+            }
+            else
+                return 1000000;
             // estimation du temps de navigation entre p1 et p2
-            return boatSpeed > 0 ? distance / boatSpeed : WrongInput;
+            return (distance / boatspeed);
+
+            #region
+            //NavNode node2 = (NavNode) N2;
+            //double distance = GetDistanceEucl(node2);
+
+            //if (distance > 10) return WrongInput;
+
+            //// get alpha l'angle entre bateau et vent
+            //double alpha = Math.Abs(GetBoatDirection(node2) - GetWindDirection(node2));
+            //if (alpha == WrongInput) return alpha;
+
+            //alpha = alpha > 180 ? 360 - alpha : alpha;
+
+            //// get vitesse vent
+            //double windSpeed = GetWindSpeed(node2);
+
+            //// get vitesse bateau
+            //double boatSpeed = GetBoatSpeed(alpha, windSpeed);
+
+            //// estimation du temps de navigation entre p1 et p2
+            //return boatSpeed > 0 ? distance / boatSpeed : WrongInput;
+            #endregion
         }
 
         public override bool EndState()
@@ -143,36 +189,75 @@ namespace _2A2022_Projet_IA.Resources
 
         public override double CalculeHCost()
         {
+            //NavNode nodeFin = new NavNode(Form1.PointArrivee[0], Form1.PointArrivee[1]);
+            //double dist = 0;
+            //double speed = 0;
+
+            //switch (HeuristicMethod)
+            //{
+            //    case Heuristic.EuclidianDistance:
+            //        dist = GetDistanceEucl(nodeFin);
+            //        speed = GetBoatSpeed(GetBoatDirection(nodeFin), GetWindSpeed(this));
+            //        break;
+            //    case Heuristic.ManhattanDistance:
+            //        dist = GetDistanceManh(nodeFin);
+            //        speed = GetBoatSpeed(GetBoatDirection(nodeFin), GetWindSpeed(this));
+            //        break;
+
+            //}
+
+            //if (speed == 0) return WrongInput;
+            //return dist / speed + dist;
+
             NavNode nodeFin = new NavNode(Form1.PointArrivee[0], Form1.PointArrivee[1]);
 
-            double alpha = Math.Abs(GetBoatDirection(nodeFin) - GetWindDirection(nodeFin));
-            alpha = alpha > 180 ? 360 - alpha : alpha;
-
-            double windSpeed = GetWindSpeed(nodeFin, 0.5);
-
-            double boatSpeed = GetBoatSpeed(alpha, windSpeed);
-
-            if (boatSpeed == 0 || boatSpeed == WrongInput) return WrongInput;
-            
+            double speed = GetBoatSpeed(GetBoatDirection(nodeFin), GetWindSpeed(this));
             double dist = GetDistanceEucl(nodeFin);
             double heuristic = 0;
 
             switch (HeuristicMethod)
             {
                 case Heuristic.ClassicTime:
-                    heuristic = dist / boatSpeed; // + 100/dist + 10/boatSpeed;
+                    heuristic = dist / speed;
                     break;
-                case Heuristic.WeightedSquareDistance:
-                    heuristic = dist / boatSpeed + Math.Pow(dist, 2);
+                case Heuristic.WeightedDistance:
+                    heuristic = dist / speed + Math.Pow(dist, 2);
                     break;
-                case Heuristic.WeightedSquareSpeed:
-                    heuristic = dist / boatSpeed + Math.Pow(boatSpeed, 2);
-                    break;
-                case Heuristic.Null:
-                    return 0;
             }
 
+            if (speed == 0) return WrongInput;
             return heuristic;
+
+            //NavNode nodeFin = new NavNode(Form1.PointArrivee[0], Form1.PointArrivee[1]);
+
+            //double alpha = Math.Abs(GetBoatDirection(nodeFin) - GetWindDirection(nodeFin));
+            //alpha = alpha > 180 ? 360 - alpha : alpha;
+
+            //double windSpeed = GetWindSpeed(nodeFin, 0.5);
+
+            //double boatSpeed = GetBoatSpeed(alpha, windSpeed);
+
+            //if (boatSpeed == 0 || boatSpeed == WrongInput) return WrongInput;
+
+            //double dist = GetDistanceEucl(nodeFin);
+            //double heuristic = 0;
+
+            //switch (HeuristicMethod)
+            //{
+            //    case Heuristic.ClassicTime:
+            //        heuristic = dist / boatSpeed; // + 100/dist + 10/boatSpeed;
+            //        break;
+            //    case Heuristic.WeightedSquareDistance:
+            //        heuristic = dist / boatSpeed + Math.Pow(dist, 2);
+            //        break;
+            //    case Heuristic.WeightedSquareSpeed:
+            //        heuristic = dist / boatSpeed + Math.Pow(boatSpeed, 2);
+            //        break;
+            //    case Heuristic.Null:
+            //        return 0;
+            //}
+
+            //return heuristic;
         }
 
 
@@ -216,42 +301,66 @@ namespace _2A2022_Projet_IA.Resources
         {
             double ypos = (N2.Y + this.Y) / 2;
 
-            if (Form1.CasNavigation == 1) return 30;
+            if (Form1.CasNavigation == 1)
+                return 30;
+            else if (Form1.CasNavigation == 2)
+                if (ypos > 150)
+                    return 180;
+                else return 90;
+            else if (ypos > 150)
+                return 170;
+            else return 65;
 
-            if (Form1.CasNavigation == 2)
-            {
-                if (ypos > 150) return 180;
-                if (ypos <= 150) return 90;
-            }
+            #region
+            //if (Form1.CasNavigation == 1) return 30;
 
-            if (Form1.CasNavigation == 3)
-            {
-                if (ypos > 150) return 170;
-                if (ypos <= 150) return 65;
-            }
+            //if (Form1.CasNavigation == 2)
+            //{
+            //    if (ypos > 150) return 180;
+            //    if (ypos <= 150) return 90;
+            //}
 
-            return 0;
+            //if (Form1.CasNavigation == 3)
+            //{
+            //    if (ypos > 150) return 170;
+            //    if (ypos <= 150) return 65;
+            //}
+
+            //return 0;
+            #endregion
         }
 
         private double GetWindSpeed(NavNode N2, double fact = 1)
         {
             double ypos = fact * (N2.Y + this.Y) / 2;
 
-            if (Form1.CasNavigation == 1) return (50);
+            if (Form1.CasNavigation == 1)
+                return 50;
+            else if (Form1.CasNavigation == 2)
+                if (ypos > 150)
+                    return 50;
+                else return 20;
+            else if (ypos > 150)
+                return 50;
+            else return 20;
 
-            if (Form1.CasNavigation == 2)
-            {
-                if (ypos > 150) return 50;
-                if (ypos / 2 <= 150) return 20;
-            }
+            #region
+            //if (Form1.CasNavigation == 1) return (50);
 
-            if (Form1.CasNavigation == 3)
-            {
-                if (ypos / 2 > 150) return 50;
-                if (ypos / 2 <= 150) return 20;
-            }
-            
-            return 0;
+            //if (Form1.CasNavigation == 2)
+            //{
+            //    if (ypos > 150) return 50;
+            //    if (ypos / 2 <= 150) return 20;
+            //}
+
+            //if (Form1.CasNavigation == 3)
+            //{
+            //    if (ypos / 2 > 150) return 50;
+            //    if (ypos / 2 <= 150) return 20;
+            //}
+
+            //return 0;
+            #endregion
         }
     }
 }
