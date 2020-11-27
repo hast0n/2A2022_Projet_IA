@@ -13,8 +13,10 @@ namespace _2A2022_Projet_IA.Resources
 
         public enum Heuristic
         {
+            Null,
             ClassicTime,
-            WeightedDistance
+            WeightedSquareSpeed,
+            WeightedSquareDistance
         }
 
         public NavNode(int x, int y)
@@ -166,9 +168,14 @@ namespace _2A2022_Projet_IA.Resources
                 case Heuristic.ClassicTime:
                     heuristic = dist / speed;
                     break;
-                case Heuristic.WeightedDistance:
+                case Heuristic.WeightedSquareDistance:
                     heuristic = dist / speed + Math.Pow(dist, 2);
                     break;
+                case Heuristic.WeightedSquareSpeed:
+                    heuristic = dist / speed + Math.Pow(speed, 2);
+                    break;
+                case Heuristic.Null:
+                    return 0;
             }
 
             if (speed == 0) return WrongInput;
