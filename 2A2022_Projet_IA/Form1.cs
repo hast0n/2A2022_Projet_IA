@@ -36,6 +36,8 @@ namespace _2A2022_Projet_IA
         public Color CurrentTraceColor { get; private set; }
         public Dictionary<Colors, Color> TraceColors { get; }
 
+        private Graphics graphics;
+
         public enum Colors
         {
             Blue, Red, Green, Yellow, Magenta
@@ -59,6 +61,7 @@ namespace _2A2022_Projet_IA
                 {Colors.Magenta, Color.Magenta},
             };
 
+
             InitializeComponent();
             InitializePictureBox();
 
@@ -69,6 +72,7 @@ namespace _2A2022_Projet_IA
             hComboBox.DataSource = Enum.GetValues(typeof(NavNode.Heuristic));
 
             stopwatch = new Stopwatch();
+            graphics = pictureBox1.CreateGraphics();
         }
 
         
@@ -105,7 +109,6 @@ namespace _2A2022_Projet_IA
         {
             Color currentColor = CurrentTraceColor;
 
-            Graphics g = pictureBox1.CreateGraphics();
             Pen pen = new Pen(currentColor);
 
             NavNode pnode = (NavNode) Solution[0];
@@ -114,7 +117,7 @@ namespace _2A2022_Projet_IA
             {
                 NavNode node = (NavNode)genericNode;
 
-                g.DrawLine(pen,
+                graphics.DrawLine(pen,
                     new Point(pnode.X, pictureBox1.Height - pnode.Y),
                     new Point(node.X, pictureBox1.Height - node.Y));
                 
@@ -201,8 +204,6 @@ namespace _2A2022_Projet_IA
         {
             DrawCircle(300-PointDepart[1], PointDepart[0], 5, Color.White);
             DrawCircle(300-PointArrivee[1], PointArrivee[0], 5, Color.Black);
-
-            pictureBox1.Refresh();
         }
         
         private string GetFormattedETA(TimeSpan eta)
@@ -268,11 +269,9 @@ namespace _2A2022_Projet_IA
         private void DrawCircle(int x, int y, int r, Color color)
         {
             double rSquared = Math.Pow(r, 2);
+            Pen pen = new Pen(color);
 
-            for (int i = x - (int)r; i <= x + r; i++)
-            for (int j = y - (int)r; j <= y + r; j++)
-                if (Math.Abs(Math.Pow(i - x, 2) + Math.Pow(j - y, 2) - rSquared) <= r)
-                    NavMap.SetPixel(i, j, color);
+            graphics.DrawEllipse(pen, x-r, y-r, r*2, r*2);
         }
 
         private void hComboBox_SelectedIndexChanged(object sender, EventArgs e)
