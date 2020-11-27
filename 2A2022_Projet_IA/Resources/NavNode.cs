@@ -8,7 +8,7 @@ namespace _2A2022_Projet_IA.Resources
     {
         public int X, Y;
         private const int WrongInput = 1000000;
-
+        
         public static Heuristic HeuristicMethod;
 
         public enum Heuristic
@@ -40,31 +40,16 @@ namespace _2A2022_Projet_IA.Resources
             
             // get alpha l'angle entre bateau et vent
             double alpha = Math.Abs(GetBoatDirection(node2) - GetWindDirection(node2));
+            if (alpha == WrongInput) return alpha;
+
             // get vitesse vent
             double windSpeed = GetWindSpeed(node2);
-            // get vitesse bateau
-            double boatSpeed=0;//              = GetBoatSpeed(alpha, windSpeed);
-            // On se ramène à un angle sur 180°
-            alpha = alpha > 180 ? 360 - alpha : alpha;
 
-            if (alpha <= 45)
-            {
-                /* (0.6 + 0.3α / 45) v_v */
-                boatSpeed = (0.6 + 0.3 * alpha / 45) * windSpeed;
-            }
-            else if (alpha <= 90)
-            {
-                /*v_b=(0.9-0.2(α-45)/45) v_v */
-                boatSpeed = (0.9 - 0.2 * (alpha - 45) / 45) * windSpeed;
-            }
-            else if (alpha < 150)
-            {
-                /* v_b=0.7(1-(α-90)/60) v_v */
-                boatSpeed = 0.7 * (1 - (alpha - 90) / 60) * windSpeed;
-            }
+            // get vitesse bateau
+            double boatSpeed = GetBoatSpeed(alpha, windSpeed);
 
             // estimation du temps de navigation entre p1 et p2
-            return (distance / boatSpeed);
+            return boatSpeed > 0 ? distance / boatSpeed : WrongInput;
         }
 
         public override bool EndState()
@@ -80,6 +65,7 @@ namespace _2A2022_Projet_IA.Resources
 
             int[][] succCoords = new int[][]
             {
+                #region neighbors test
                 //new[] {-3,  3}, new[] {-2,  3}, new[] {-1,  3}, new[] {0,  3}, new[] {1,  3}, new[] {2,  3}, new[] {3,  3},
                 //new[] {-3,  2}, new[] {-2,  2}, new[] {-1,  2}, new[] {0,  2}, new[] {1,  2}, new[] {2,  2}, new[] {3,  2},
                 //new[] {-3,  1}, new[] {-2,  1}, new[] {-1,  1}, new[] {0,  1}, new[] {1,  1}, new[] {2,  1}, new[] {3,  1},
@@ -95,7 +81,7 @@ namespace _2A2022_Projet_IA.Resources
                 //new[] {-1,  1}, new[] {0,  1}, new[] {1,  1},
                 //new[] {-1,  0},                new[] {1,  0},
                 //new[] {-1, -1}, new[] {0, -1}, new[] {1, -1},
-               
+
                 //new[] {-4,  4}, new[] {-3,  4}, new[] {-2,  4}, new[] {-1,  4}, new[] {0,  4}, new[] {1,  4}, new[] {2,  4}, new[] {3,  4}, new[] {4,  4},
                 //new[] {-4,  3}, new[] {-3,  3}, new[] {-2,  3}, new[] {-1,  3}, new[] {0,  3}, new[] {1,  3}, new[] {2,  3}, new[] {3,  3}, new[] {4,  3},
                 //new[] {-4,  2}, new[] {-3,  2}, new[] {-2,  2}, new[] {-1,  2}, new[] {0,  2}, new[] {1,  2}, new[] {2,  2}, new[] {3,  2}, new[] {4,  2},
@@ -105,12 +91,6 @@ namespace _2A2022_Projet_IA.Resources
                 //new[] {-4, -2}, new[] {-3, -2}, new[] {-2, -2}, new[] {-1, -2}, new[] {0, -2}, new[] {1, -2}, new[] {2, -2}, new[] {3, -2}, new[] {4, -2},
                 //new[] {-4, -3}, new[] {-3, -3}, new[] {-2, -3}, new[] {-1, -3}, new[] {0, -3}, new[] {1, -3}, new[] {2, -3}, new[] {3, -3}, new[] {4, -3},
                 //new[] {-4, -4}, new[] {-3, -4}, new[] {-2, -4}, new[] {-1, -4}, new[] {0, -4}, new[] {1, -4}, new[] {2, -4}, new[] {3, -4}, new[] {4, -4}
-                        
-                new[] {-2,  2}, new[] {-1,  2}, new[] {0,  2}, new[] {1,  2}, new[] {2,  2},
-                new[] {-2,  1},                                               new[] {2,  1},
-                new[] {-2,  0},                                               new[] {2,  0},
-                new[] {-2, -1},                                               new[] {2, -1},
-                new[] {-2, -2}, new[] {-1, -2}, new[] {0, -2}, new[] {1, -2}, new[] {2, -2}
 
                 //new[] {-4,  4}, new[] {-3,  4}, new[] {-2,  4}, new[] {-1,  4}, new[] {0,  4}, new[] {1,  4}, new[] {2,  4}, new[] {3,  4}, new[] {4,  4},
                 //new[] {-4,  3},                                                                                                             new[] {4,  3},
@@ -121,12 +101,19 @@ namespace _2A2022_Projet_IA.Resources
                 //new[] {-4, -2},                                                                                                             new[] {4, -2},
                 //new[] {-4, -3},                                                                                                             new[] {4, -3},
                 //new[] {-4, -4}, new[] {-3, -4}, new[] {-2, -4}, new[] {-1, -4}, new[] {0, -4}, new[] {1, -4}, new[] {2, -4}, new[] {3, -4}, new[] {4, -4}
-                
-                 //                new[] {-1,  2},                new[] {1,  2},
-                 //new[] {-2,  1}, new[] {-1,  1}, new[] {0,  1}, new[] {1,  1}, new[] {2,  1},
-                 //                new[] {-1,  0},                new[] {1,  0},
-                 //new[] {-2, -1}, new[] {-1, -1}, new[] {0, -1}, new[] {1, -1}, new[] {2, -1},
-                 //                new[] {-1, -2},                new[] {1, -2},
+
+                //                new[] {-1,  2},                new[] {1,  2},
+                //new[] {-2,  1}, new[] {-1,  1}, new[] {0,  1}, new[] {1,  1}, new[] {2,  1},
+                //                new[] {-1,  0},                new[] {1,  0},
+                //new[] {-2, -1}, new[] {-1, -1}, new[] {0, -1}, new[] {1, -1}, new[] {2, -1},
+                //                new[] {-1, -2},                new[] {1, -2},
+                #endregion
+
+                new[] {-2,  2}, new[] {-1,  2}, new[] {0,  2}, new[] {1,  2}, new[] {2,  2},
+                new[] {-2,  1},                                               new[] {2,  1},
+                new[] {-2,  0},                                               new[] {2,  0},
+                new[] {-2, -1},                                               new[] {2, -1},
+                new[] {-2, -2}, new[] {-1, -2}, new[] {0, -2}, new[] {1, -2}, new[] {2, -2}
             };
 
             double alpha = GetBoatDirection(nodeFin);
@@ -156,28 +143,35 @@ namespace _2A2022_Projet_IA.Resources
         {
             NavNode nodeFin = new NavNode(Form1.PointArrivee[0], Form1.PointArrivee[1]);
 
-            double speed = GetBoatSpeed(GetBoatDirection(nodeFin), GetWindSpeed(this));
+            double alpha = Math.Abs(GetBoatDirection(nodeFin) - GetWindDirection(nodeFin));
+            double windSpeed = GetWindSpeed(nodeFin, 0.5);
+
+            double boatSpeed = GetBoatSpeed(alpha, windSpeed);
+
+            if (boatSpeed == 0 || boatSpeed == WrongInput) return WrongInput;
+            
             double dist = GetDistanceEucl(nodeFin);
             double heuristic = 0;
 
             switch (HeuristicMethod)
             {
                 case Heuristic.ClassicTime:
-                    heuristic = dist / speed;
+                    heuristic = dist / boatSpeed; // + 100/dist + 10/boatSpeed;
                     break;
                 case Heuristic.WeightedSquareDistance:
-                    heuristic = dist / speed + Math.Pow(dist, 2);
+                    heuristic = dist / boatSpeed + Math.Pow(dist, 2);
                     break;
                 case Heuristic.WeightedSquareSpeed:
-                    heuristic = dist / speed + Math.Pow(speed, 2);
+                    heuristic = dist / boatSpeed + Math.Pow(boatSpeed, 2);
                     break;
                 case Heuristic.Null:
                     return 0;
             }
 
-            if (speed == 0) return WrongInput;
             return heuristic;
         }
+
+
         
         private int GetDistanceManh(NavNode N2)
         {
@@ -205,106 +199,55 @@ namespace _2A2022_Projet_IA.Resources
         
         private double GetBoatSpeed(double alpha, double VitVent)
         {
-            if (alpha >= 0 && alpha < 45)
-            {
-                return (0.6 + 0.3 * alpha / 45) * VitVent;
-            }
+            if (alpha <= 45) return (0.6 + 0.3 * alpha / 45) * VitVent;
 
-            if (alpha >= 45 && alpha < 90)
-            {
-                return (0.9 - 0.2 * (alpha - 45)/45) * VitVent;
-            }
+            if (alpha <= 90) return (0.9 - 0.2 * (alpha - 45)/45) * VitVent;
             
-            if (alpha >= 90 && alpha < 150)
-            {
-                return 0.7 *(1- (alpha-90) / 60) * VitVent;
-            }
+            if (alpha < 150) return 0.7 *(1- (alpha-90) / 60) * VitVent;
 
             return 0;
         }
 
         private double GetWindDirection(NavNode N2)
         {
-            if (Form1.CasNavigation == 1)
+            double ypos = (N2.Y + this.Y) / 2;
+
+            if (Form1.CasNavigation == 1) return 30;
+
+            if (Form1.CasNavigation == 2)
             {
-                return (30);
+                if (ypos > 150) return 180;
+                if (ypos <= 150) return 90;
             }
-            else if (Form1.CasNavigation == 2)
+
+            if (Form1.CasNavigation == 3)
             {
-                if ((N2.Y + this.Y)/2 > 150)
-                {
-                    return (180);
-                }
-                else if ((N2.Y + this.Y) / 2 <= 150)
-                {
-                    return (90);
-                }
-                else
-                {
-                    return (0);
-                }
+                if (ypos > 150) return 170;
+                if (ypos <= 150) return 65;
             }
-            else if (Form1.CasNavigation == 3)
-            {
-                if ((N2.Y + this.Y) / 2 > 150)
-                {
-                    return (170);
-                }
-                else if ((N2.Y + this.Y) / 2 <= 150)
-                {
-                    return (65);
-                }
-                else
-                {
-                    return (0);
-                }
-            }
-            else
-            {
-                return (0);
-            }
+
+            return 0;
         }
 
-        private double GetWindSpeed(NavNode N2)
+        private double GetWindSpeed(NavNode N2, double fact = 1)
         {
-            if (Form1.CasNavigation == 1)
+            double ypos = fact * (N2.Y + this.Y) / 2;
+
+            if (Form1.CasNavigation == 1) return (50);
+
+            if (Form1.CasNavigation == 2)
             {
-                return (50);
+                if (ypos > 150) return 50;
+                if (ypos / 2 <= 150) return 20;
             }
-            else if (Form1.CasNavigation == 2)
+
+            if (Form1.CasNavigation == 3)
             {
-                if ((N2.Y + this.Y) / 2 > 150)
-                {
-                    return (50);
-                }
-                else if ((N2.Y + this.Y) / 2 <= 150)
-                {
-                    return (20);
-                }
-                else
-                {
-                    return (0);
-                }
+                if (ypos / 2 > 150) return 50;
+                if (ypos / 2 <= 150) return 20;
             }
-            else if (Form1.CasNavigation == 3)
-            {
-                if ((N2.Y + this.Y) / 2 > 150)
-                {
-                    return (50);
-                }
-                else if ((N2.Y + this.Y) / 2 <= 150)
-                {
-                    return (20);
-                }
-                else
-                {
-                    return (0);
-                }
-            }
-            else
-            {
-                return (0);
-            }
+            
+            return 0;
         }
     }
 }
