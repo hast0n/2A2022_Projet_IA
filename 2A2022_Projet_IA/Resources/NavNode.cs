@@ -14,7 +14,7 @@ namespace _2A2022_Projet_IA.Resources
 
         public enum Heuristic
         {
-            //Null,
+            Null,
             ClassicTime,
             WeightedDistance
             //WeightedSquareSpeed,
@@ -189,6 +189,7 @@ namespace _2A2022_Projet_IA.Resources
 
         public override double CalculeHCost()
         {
+            #region
             //NavNode nodeFin = new NavNode(Form1.PointArrivee[0], Form1.PointArrivee[1]);
             //double dist = 0;
             //double speed = 0;
@@ -208,6 +209,7 @@ namespace _2A2022_Projet_IA.Resources
 
             //if (speed == 0) return WrongInput;
             //return dist / speed + dist;
+            #endregion
 
             NavNode nodeFin = new NavNode(Form1.PointArrivee[0], Form1.PointArrivee[1]);
 
@@ -223,11 +225,14 @@ namespace _2A2022_Projet_IA.Resources
                 case Heuristic.WeightedDistance:
                     heuristic = dist / speed + Math.Pow(dist, 2);
                     break;
+                case Heuristic.Null:
+                    return 0;
             }
 
             if (speed == 0) return WrongInput;
             return heuristic;
 
+            #region Good Heuristic
             //NavNode nodeFin = new NavNode(Form1.PointArrivee[0], Form1.PointArrivee[1]);
 
             //double alpha = Math.Abs(GetBoatDirection(nodeFin) - GetWindDirection(nodeFin));
@@ -258,6 +263,7 @@ namespace _2A2022_Projet_IA.Resources
             //}
 
             //return heuristic;
+            #endregion
         }
 
 
