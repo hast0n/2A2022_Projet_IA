@@ -42,6 +42,8 @@ namespace _2A2022_Projet_IA.Resources
             double alpha = Math.Abs(GetBoatDirection(node2) - GetWindDirection(node2));
             if (alpha == WrongInput) return alpha;
 
+            alpha = alpha > 180 ? 360 - alpha : alpha;
+
             // get vitesse vent
             double windSpeed = GetWindSpeed(node2);
 
@@ -144,6 +146,8 @@ namespace _2A2022_Projet_IA.Resources
             NavNode nodeFin = new NavNode(Form1.PointArrivee[0], Form1.PointArrivee[1]);
 
             double alpha = Math.Abs(GetBoatDirection(nodeFin) - GetWindDirection(nodeFin));
+            alpha = alpha > 180 ? 360 - alpha : alpha;
+
             double windSpeed = GetWindSpeed(nodeFin, 0.5);
 
             double boatSpeed = GetBoatSpeed(alpha, windSpeed);
